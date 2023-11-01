@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {makeStyles, Text, Button, useThemeMode, useTheme} from '@rneui/themed';
+import {makeStyles, Text, Button, useThemeMode, useTheme, Image} from '@rneui/themed';
 import Input from '../components/Input';
 import {STYLES} from '../global/styles';
 
@@ -20,12 +20,17 @@ export default function VerifyScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.body}>
+                <Image
+                    source={require('../assets/appname.png')}
+                    style={{width: 200, height: 80, resizeMode: 'contain'}}
+                />
                 <Text h4>Check your email</Text>
                 <Text style={styles.text}>We've sent a pin to apexcup199096@gmail.com</Text>
                 <Input
                     placeholder="00000"
                     value={code}
                     onChangeText={setCode}
+                    keyboardType="numeric"
                 />
                 <View style={STYLES.wFull}>
                     <Button

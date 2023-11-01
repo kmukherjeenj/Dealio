@@ -6,6 +6,7 @@ import VerifyScreen from '../screens/Verify';
 import EditAccountScreen from '../screens/EditAccount';
 import DealListScreen from '../screens/DealList';
 import DealDetailScreen from '../screens/DealDetail';
+import RootNavigator from './home';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,8 +27,8 @@ const Navigator = () => {
                     component={EditAccountScreen}
                 />
                 <Stack.Screen
-                    name="DealList"
-                    component={DealListScreen}
+                    name="HomeNav"
+                    component={RootNavigator}
                 />
                 <Stack.Screen
                     name="DealDetail"

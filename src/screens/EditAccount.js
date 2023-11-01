@@ -10,10 +10,7 @@ import {DEAL_SIZE, GEOGRAPHIES, INVESTMENT_SECTORS, INVESTMENT_SIZE, INVESTMENT_
 export default function EditAccountScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();
-    const {setMode, mode} = useThemeMode();
-    const [disabled, setDisabled] = useState(true);
     const [checked, setChecked] = useState(false);
-    const [code, setCode] = useState('');
     const [accredited, setAccredited] = useState([]);
     const [sectors, setSectors] = useState([]);
     const [deals, setDeals] = useState([]);
@@ -26,7 +23,7 @@ export default function EditAccountScreen({navigation}) {
     };
 
     const goList = () => {
-        navigation.navigate('DealList');
+        navigation.navigate('HomeNav');
     };
 
     const onAddAccredited = (item) => {

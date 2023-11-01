@@ -1,25 +1,9 @@
-const { getDefaultConfig } = require("metro-config");
+const {getDefaultConfig} = require('expo/metro-config');
 
-module.exports = (async () => {
-	const {
-		resolver: { sourceExts, assetExts },
-	} = await getDefaultConfig();
-	return {
-		transformer: {
-			// This was important for me
-			getTransformOptions: async () => ({
-				transform: {
-					experimentalImportSupport: false,
-					inlineRequires: false,
-				},
-			}),
-			babelTransformerPath: require.resolve(
-				"react-native-svg-transformer"
-			),
-		},
-		resolver: {
-			assetExts: assetExts.filter((ext) => ext !== "svg"),
-			sourceExts: [...sourceExts, "svg"],
-		},
-	};
-})();
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname, {
+    // Enable CSS support.
+    isCSSEnabled: true,
+});
+
+module.exports = config;

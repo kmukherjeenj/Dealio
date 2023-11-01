@@ -25,6 +25,10 @@ export default function LoginScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.body}>
+                <Image
+                    source={require('../assets/appname.png')}
+                    style={{width: 200, height: 80, resizeMode: 'contain'}}
+                />
                 <Text h4>Log in / Sign up</Text>
                 <Text style={styles.text}>Enter your email to receive a Login PIN. Then log in to set up an account or use your existing account.</Text>
                 <Input

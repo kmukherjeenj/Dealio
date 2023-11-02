@@ -1,56 +1,79 @@
-# Dealio
-Deal Management System 
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-What is a Deal Management System ? What are some features ?
+# Getting Started
 
-The basic features of a deal management system (DMS) include:
+>**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-Deal tracking: A DMS should allow you to track the progress of each deal through your sales pipeline, from initial contact to close. This includes tracking the deal stage, key dates, and tasks that need to be completed.
-Pipeline management: A DMS should also help you manage your sales pipeline as a whole. This includes features such as forecasting, reporting, and analytics.
-Collaboration: A DMS should make it easy for sales teams to collaborate on deals. This includes features such as task assignment, commenting, and document sharing.
-Document management: A DMS should provide a central place to store all of the documents associated with each deal, such as contracts, proposals, and presentations.
-Reporting and analytics: A DMS should generate reports and analytics that can help sales teams track their performance, identify areas for improvement, and make better decisions.
-In addition to these basic features, many DMSs also offer more advanced features such as:
+## Step 1: Start the Metro Server
 
-CRM integration: A DMS that integrates with your CRM system can help you streamline your sales process and keep all of your customer data in one place.
-Email and calendar integration: A DMS that integrates with your email and calendar can help you keep track of all of your sales-related communications and appointments.
-Automation: Some DMSs can automate tasks such as sending follow-up emails and generating reports.
-The specific features that are important for you will depend on the size and complexity of your sales operation, as well as your industry. However, the basic features listed above are essential for any DMS.
+First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-Benefits of using a deal management system
-There are many benefits to using a deal management system, including:
+To start Metro, run the following command from the _root_ of your React Native project:
 
-Increased efficiency and productivity: A DMS can help you streamline your sales process and automate tasks, which can free up your sales team to focus on selling.
-Improved visibility and collaboration: A DMS can give you a real-time view of your sales pipeline and make it easy for sales teams to collaborate on deals.
-Better decision-making: A DMS can provide you with reports and analytics that can help you track your performance, identify areas for improvement, and make better decisions about how to allocate your resources.
-Increased sales: A DMS can help you close more deals by helping you stay organized, focused, and on track.
+```bash
+# using npm
+npm start
 
+# OR using Yarn
+yarn start
+```
 
-What platform to use when audience is split between smart device and Desktop/web browser ?
+## Step 2: Start your Application
 
-Flutter and Firebase are two popular technologies that are often used together to develop mobile and web applications. Flutter is a cross-platform UI toolkit that allows developers to build native-looking applications for Android, iOS, and the web using a single codebase. Firebase is a mobile and web application development platform that provides a suite of tools and services to help developers build, grow, and measure their applications.
+Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-There are a number of competitors to Flutter and Firebase, including:
+### For Android
 
-React Native: React Native is a cross-platform UI toolkit that allows developers to build native-looking applications for Android, iOS, and the web using JavaScript.
-Xamarin: Xamarin is a cross-platform UI toolkit that allows developers to build native-looking applications for Android, iOS, and the web using C# or F#.
-NativeScript: NativeScript is a cross-platform UI toolkit that allows developers to build native-looking applications for Android, iOS, and the web using JavaScript or TypeScript.
-AWS Amplify: AWS Amplify is a mobile and web application development platform that provides a suite of tools and services to help developers build, grow, and measure their applications on Amazon Web Services (AWS).
-Backendless: Backendless is a mobile and web application development platform that provides a suite of tools and services to help developers build, grow, and measure their backend applications.
-Parse: Parse is a mobile and web application development platform that provides a suite of tools and services to help developers build, grow, and measure their backend applications.
-The best technology for you will depend on your specific needs and requirements. If you are looking for a cross-platform UI toolkit that is easy to learn and use, Flutter is a good option. If you are looking for a mobile and web application development platform that provides a suite of tools and services to help you build, grow, and measure your applications, Firebase is a good option.
+```bash
+# using npm
+npm run android
 
-Application Roles
+# OR using Yarn
+yarn android
+```
 
-User/Buyer UI
-  Onboarding - Buyer account creation and management. A buyer needs to be an accredited investor. Account creation must follow regulation AKA KYC etc.
-  Dashboard - Will contain deals the user is particpating.
-  
-Seller UI
-  Onboarding - Seller account creation and management. A seller must be registered to sell financial products. All license must be in checked 
-  Dashboard - Which will contain deals the Seller is offering.
+### For iOS
 
-Admin - Functional and System
-  Role used to maintain system infrastructure and data management 
+```bash
+# using npm
+npm run ios
 
-  
+# OR using Yarn
+yarn ios
+```
+
+If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+
+This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+
+## Step 3: Modifying your App
+
+Now that you have successfully run the app, let's modify it.
+
+1. Open `App.tsx` in your text editor of choice and edit some lines.
+2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+
+   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+
+## Congratulations! :tada:
+
+You've successfully run and modified your React Native App. :partying_face:
+
+### Now what?
+
+- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
+- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+
+# Troubleshooting
+
+If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+
+# Learn More
+
+To learn more about React Native, take a look at the following resources:
+
+- [React Native Website](https://reactnative.dev) - learn more about React Native.
+- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
+- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
+- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
+- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.

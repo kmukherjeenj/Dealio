@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {makeStyles, Text, Button, useThemeMode, useTheme, Image} from '@rneui/themed';
+import {makeStyles, Text, Button, Image} from '@rneui/themed';
 import Input from '../components/Input';
 import {STYLES} from '../global/styles';
 
 export default function VerifyScreen({navigation}) {
     const styles = useStyles();
-    const {setMode, mode} = useThemeMode();
     const [code, setCode] = useState('');
 
     const onResend = () => {
@@ -25,7 +24,9 @@ export default function VerifyScreen({navigation}) {
                     style={{width: 200, height: 80, resizeMode: 'contain'}}
                 />
                 <Text h4>Check your email</Text>
-                <Text style={styles.text}>We've sent a pin to apexcup199096@gmail.com</Text>
+                <Text style={styles.text}>
+                    We've sent a pin to apexcup199096@gmail.com
+                </Text>
                 <Input
                     placeholder="00000"
                     value={code}
@@ -36,16 +37,14 @@ export default function VerifyScreen({navigation}) {
                     <Button
                         size="md"
                         onPress={onSignin}
-                        disabled={code.length < 5}
-                    >
+                        disabled={code.length < 5}>
                         Sign In
                     </Button>
                     <Button
                         size="md"
                         type="clear"
                         onPress={onResend}
-                        containerStyle={STYLES.mt12}
-                    >
+                        containerStyle={STYLES.mt12}>
                         I need another pin
                     </Button>
                 </View>
@@ -54,7 +53,7 @@ export default function VerifyScreen({navigation}) {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,

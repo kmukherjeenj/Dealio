@@ -1,8 +1,16 @@
 import React, {useState} from 'react';
-import {Linking, Platform, ScrollView, TouchableOpacity, View} from 'react-native';
+import {
+    Linking,
+    Platform,
+    ScrollView,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import {makeStyles, Text, useTheme, Image, Button} from '@rneui/themed';
 import {STYLES} from '../global/styles';
-import {Ionicons, FontAwesome5, Feather} from '@expo/vector-icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import ImageView from 'react-native-image-viewing';
 
 export default function DealDetailScreen({navigation, route}) {
@@ -11,7 +19,7 @@ export default function DealDetailScreen({navigation, route}) {
     const {deal} = route.params;
     const [fullImg, setFullImg] = useState(false);
 
-    const goLink = (url) => {
+    const goLink = url => {
         Linking.openURL(url);
     };
 
@@ -30,10 +38,7 @@ export default function DealDetailScreen({navigation, route}) {
                             color={theme.colors.grey1}
                         />
                     </TouchableOpacity>
-                    <Text
-                        h4
-                        style={styles.headerText}
-                    >
+                    <Text h4 style={styles.headerText}>
                         {deal.name}
                     </Text>
                     <TouchableOpacity>
@@ -46,8 +51,7 @@ export default function DealDetailScreen({navigation, route}) {
                 </View>
                 <ScrollView
                     style={styles.content}
-                    showsVerticalScrollIndicator={false}
-                >
+                    showsVerticalScrollIndicator={false}>
                     <View style={styles.imgContainer}>
                         <ImageView
                             images={[deal.img]}
@@ -68,20 +72,27 @@ export default function DealDetailScreen({navigation, route}) {
                             <Text style={styles.dealNameText}>{deal.name}</Text>
                             <Text>{deal.summary}</Text>
                             <View style={styles.investmentItemContainer}>
-                                <View style={styles.investmentTypeTextContainer}>
-                                    <Text style={styles.investmentTypeText}>{deal.investmentType}</Text>
+                                <View
+                                    style={styles.investmentTypeTextContainer}>
+                                    <Text style={styles.investmentTypeText}>
+                                        {deal.investmentType}
+                                    </Text>
                                 </View>
-                                <View style={styles.investmentSizeTextContainer}>
-                                    <Text style={styles.investmentSizeText}>{deal.investmentSize}</Text>
+                                <View
+                                    style={styles.investmentSizeTextContainer}>
+                                    <Text style={styles.investmentSizeText}>
+                                        {deal.investmentSize}
+                                    </Text>
                                 </View>
                             </View>
                             <View style={styles.itemFooter}>
                                 {deal.attribute?.map((att, index) => (
                                     <View
                                         key={index}
-                                        style={styles.attributeTextContainer}
-                                    >
-                                        <Text style={styles.attributeText}>{att}</Text>
+                                        style={styles.attributeTextContainer}>
+                                        <Text style={styles.attributeText}>
+                                            {att}
+                                        </Text>
                                     </View>
                                 ))}
                             </View>
@@ -89,65 +100,78 @@ export default function DealDetailScreen({navigation, route}) {
                                 <TouchableOpacity
                                     style={styles.attachment}
                                     onPress={() => {
-                                        goLink(deal.attachments.executiveSummery);
-                                    }}
-                                >
+                                        goLink(
+                                            deal.attachments.executiveSummery,
+                                        );
+                                    }}>
                                     <Feather
                                         name="link"
                                         size={20}
                                         color={theme.colors.grey3}
                                     />
-                                    <Text style={styles.attachmentText}>SUMMARY</Text>
+                                    <Text style={styles.attachmentText}>
+                                        SUMMARY
+                                    </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.attachment}
                                     onPress={() => {
                                         goLink(deal.attachments.projection);
-                                    }}
-                                >
+                                    }}>
                                     <Feather
                                         name="link"
                                         size={20}
                                         color={theme.colors.grey3}
                                     />
-                                    <Text style={styles.attachmentText}>PROJECTION</Text>
+                                    <Text style={styles.attachmentText}>
+                                        PROJECTION
+                                    </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.attachment}
                                     onPress={() => {
                                         goLink(deal.attachments.misc);
-                                    }}
-                                >
+                                    }}>
                                     <Feather
                                         name="link"
                                         size={20}
                                         color={theme.colors.grey3}
                                     />
-                                    <Text style={styles.attachmentText}>MISC</Text>
+                                    <Text style={styles.attachmentText}>
+                                        MISC
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.ownerInformation}>
                             <View style={{overflow: 'hidden'}}>
                                 <View style={styles.ownerHeader}>
-                                    <Text style={styles.ownerHeaderText}>Owner Information</Text>
+                                    <Text style={styles.ownerHeaderText}>
+                                        Owner Information
+                                    </Text>
                                 </View>
                             </View>
-                            <View style={[STYLES.row, STYLES.alignC, STYLES.mb8]}>
+                            <View
+                                style={[STYLES.row, STYLES.alignC, STYLES.mb8]}>
                                 <Feather
                                     name="user"
                                     size={22}
                                     color={theme.colors.success}
                                 />
-                                <Text style={styles.ownerText}>{deal.ownerName}</Text>
+                                <Text style={styles.ownerText}>
+                                    {deal.ownerName}
+                                </Text>
                             </View>
-                            <View style={[STYLES.row, STYLES.alignC, STYLES.mb8]}>
+                            <View
+                                style={[STYLES.row, STYLES.alignC, STYLES.mb8]}>
                                 <Feather
                                     name="phone"
                                     size={22}
                                     color={theme.colors.success}
                                 />
-                                <Text style={styles.ownerText}>{deal.primaryContact}</Text>
+                                <Text style={styles.ownerText}>
+                                    {deal.primaryContact}
+                                </Text>
                             </View>
                             <View style={[STYLES.row, STYLES.alignC]}>
                                 <Ionicons
@@ -155,22 +179,21 @@ export default function DealDetailScreen({navigation, route}) {
                                     size={24}
                                     color={theme.colors.success}
                                 />
-                                <Text style={styles.ownerText}>{deal.address}</Text>
+                                <Text style={styles.ownerText}>
+                                    {deal.address}
+                                </Text>
                             </View>
                         </View>
                     </View>
                     <View style={{height: 200}} />
                 </ScrollView>
-                <Button
-                    title={'Sign'}
-                    containerStyle={styles.signButton}
-                />
+                <Button title={'Sign'} containerStyle={styles.signButton} />
             </View>
         </View>
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
@@ -198,7 +221,7 @@ const useStyles = makeStyles((theme) => ({
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.divider,
         paddingHorizontal: theme.spacing.lg,
-        paddingTop: 60,
+        paddingTop: Platform.select({ios: 60, android: 30}),
         paddingBottom: theme.spacing.lg,
         shadowColor: '#000',
         shadowOffset: {
@@ -312,7 +335,7 @@ const useStyles = makeStyles((theme) => ({
     },
     signButton: {
         position: 'absolute',
-        bottom: 136,
+        bottom: Platform.select({android: 100, ios: 136}),
         width: '90%',
         alignSelf: 'center',
     },

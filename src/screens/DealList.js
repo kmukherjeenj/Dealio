@@ -1,34 +1,38 @@
 import React, {useState} from 'react';
-import {FlatList, TouchableOpacity, View} from 'react-native';
+import {FlatList, Platform, TouchableOpacity, View} from 'react-native';
 import {Image, makeStyles, Text, useTheme} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import {DEALS} from '../constant/mock-data';
 import Input from '../components/Input';
-import {AntDesign, Feather} from '@expo/vector-icons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
 
 export default function DealListScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();
     const [search, setSearch] = useState('');
 
-    const goDetail = (data) => {
+    const goDetail = data => {
         navigation.navigate('DealDetail', {deal: data});
     };
 
-    const renderFooter = (attrs) => {
+    const renderFooter = attrs => {
         if (attrs?.length > 3) {
             return (
                 <>
-                    {[0, 1, 2].map((i) => (
-                        <View
-                            key={i}
-                            style={styles.attributeTextContainer}
-                        >
+                    {[0, 1, 2].map(i => (
+                        <View key={i} style={styles.attributeTextContainer}>
                             <Text style={styles.attributeText}>{attrs[i]}</Text>
                         </View>
                     ))}
-                    <View style={[styles.attributeTextContainer, {backgroundColor: theme.colors.grey1}]}>
-                        <Text style={styles.attributeText}>+{attrs?.length - 3}</Text>
+                    <View
+                        style={[
+                            styles.attributeTextContainer,
+                            {backgroundColor: theme.colors.grey1},
+                        ]}>
+                        <Text style={styles.attributeText}>
+                            +{attrs?.length - 3}
+                        </Text>
                     </View>
                 </>
             );
@@ -36,10 +40,7 @@ export default function DealListScreen({navigation}) {
             return (
                 <>
                     {attrs?.map((attr, index) => (
-                        <View
-                            key={index}
-                            style={styles.attributeTextContainer}
-                        >
+                        <View key={index} style={styles.attributeTextContainer}>
                             <Text style={styles.attributeText}>{attr}</Text>
                         </View>
                     ))}
@@ -54,25 +55,34 @@ export default function DealListScreen({navigation}) {
                 style={styles.item}
                 onPress={() => {
                     goDetail(data);
-                }}
-            >
+                }}>
                 <View style={styles.itemBoby}>
                     <View>
                         <Text style={styles.normalText}>
                             <Text style={styles.dealNameText}>{data.name}</Text>
                         </Text>
                         <Text style={styles.normalText}>
-                            OWNER: <Text style={styles.nameText}>{data.ownerName}</Text>
+                            OWNER:{' '}
+                            <Text style={styles.nameText}>
+                                {data.ownerName}
+                            </Text>
                         </Text>
                         <Text style={styles.normalText}>
-                            PHONE: <Text style={styles.nameText}>{data.primaryContact}</Text>
+                            PHONE:{' '}
+                            <Text style={styles.nameText}>
+                                {data.primaryContact}
+                            </Text>
                         </Text>
                         <View style={styles.investmentItemContainer}>
                             <View style={styles.investmentTypeTextContainer}>
-                                <Text style={styles.investmentTypeText}>{data.investmentType}</Text>
+                                <Text style={styles.investmentTypeText}>
+                                    {data.investmentType}
+                                </Text>
                             </View>
                             <View style={styles.investmentSizeTextContainer}>
-                                <Text style={styles.investmentSizeText}>{data.investmentSize}</Text>
+                                <Text style={styles.investmentSizeText}>
+                                    {data.investmentSize}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -81,7 +91,9 @@ export default function DealListScreen({navigation}) {
                         style={{height: 120, width: 90, resizeMode: 'contain'}}
                     />
                 </View>
-                <View style={styles.itemFooter}>{renderFooter(data.attribute)}</View>
+                <View style={styles.itemFooter}>
+                    {renderFooter(data.attribute)}
+                </View>
             </TouchableOpacity>
         );
     };
@@ -129,23 +141,13 @@ export default function DealListScreen({navigation}) {
                     showsVerticalScrollIndicator={false}
                     renderItem={({item, index}) => {
                         if (item.type === 'date') {
-                            return (
-                                <DealHeader
-                                    key={index}
-                                    date={item.date}
-                                />
-                            );
+                            return <DealHeader key={index} date={item.date} />;
                         } else {
-                            return (
-                                <DealItem
-                                    key={index}
-                                    data={item.data}
-                                />
-                            );
+                            return <DealItem key={index} data={item.data} />;
                         }
                     }}
                     contentContainerStyle={[STYLES.wFull]}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={item => item.id}
                     ListFooterComponent={<View style={{height: 130}} />}
                 />
             </View>
@@ -153,12 +155,12 @@ export default function DealListScreen({navigation}) {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
         paddingHorizontal: theme.spacing.lg,
-        paddingTop: 50,
+        paddingTop: Platform.select({ios: 50, android: 20}),
     },
     body: {
         display: 'flex',

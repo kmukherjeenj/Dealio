@@ -65,7 +65,6 @@ const theme = createTheme({
             },
             inputStyle: {
                 borderWidth: 0,
-                outline: 0,
                 fontSize: 14,
             },
             containerStyle: {

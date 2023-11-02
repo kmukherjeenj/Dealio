@@ -1,86 +1,85 @@
-import React, { useState, useContext } from "react";
-import { Input as RNEInput, ThemeContext } from "@rneui/themed";
+import React, {useState, useContext} from 'react';
+import {Input as RNEInput, ThemeContext} from '@rneui/themed';
 
-const Input = (props) => {
-	const [focused, setFocused] = useState(false);
-	const [showPasswordText, togglePasswordText] = useState(true);
-	const { theme } = useContext(ThemeContext);
+const Input = props => {
+    const [focused, setFocused] = useState(false);
+    const [showPasswordText, togglePasswordText] = useState(true);
+    const {theme} = useContext(ThemeContext);
 
-	const onFocus = () => {
-		setFocused(true);
-		props.onFocus();
-	};
+    const onFocus = () => {
+        setFocused(true);
+        props.onFocus();
+    };
 
-	const onBlur = () => {
-		setFocused(false);
-		props.onBlur();
-	};
+    const onBlur = () => {
+        setFocused(false);
+        props.onBlur();
+    };
 
-	const primaryColor = theme.colors.primary;
+    const primaryColor = theme.colors.primary;
 
-	const inputContainerStyle = {
-		...props.inputContainerStyle,
-		...(focused ? { borderColor: primaryColor } : {}),
-	};
+    const inputContainerStyle = {
+        ...props.inputContainerStyle,
+        ...(focused ? {borderColor: primaryColor} : {}),
+    };
 
-	const labelStyle = {
-		...props.labelStyle,
-		...(focused ? { color: primaryColor } : {}),
-	};
+    const labelStyle = {
+        ...props.labelStyle,
+        ...(focused ? {color: primaryColor} : {}),
+    };
 
-	const leftIcon = {
-		...props.leftIcon,
-		...(focused ? { color: primaryColor } : {}),
-	};
+    const leftIcon = {
+        ...props.leftIcon,
+        ...(focused ? {color: primaryColor} : {}),
+    };
 
-	let rightIcon = {
-		...props.rightIcon,
-		...(focused ? { color: primaryColor } : {}),
-	};
+    let rightIcon = {
+        ...props.rightIcon,
+        ...(focused ? {color: primaryColor} : {}),
+    };
 
-	if (props.password) {
-		let passwordToggler = {
-			type: "ionicon",
-			name: showPasswordText ? "ios-eye" : "ios-eye-off",
-			onPress: () => togglePasswordText(!showPasswordText),
-			containerStyle: { marginRight: 10 },
-			underlayColor: "transparent",
-		};
+    if (props.password) {
+        let passwordToggler = {
+            type: 'ionicon',
+            name: showPasswordText ? 'ios-eye' : 'ios-eye-off',
+            onPress: () => togglePasswordText(!showPasswordText),
+            containerStyle: {marginRight: 10},
+            underlayColor: 'transparent',
+        };
 
-		rightIcon = {
-			...rightIcon,
-			...passwordToggler,
-		};
-	}
+        rightIcon = {
+            ...rightIcon,
+            ...passwordToggler,
+        };
+    }
 
-	return (
-		<RNEInput
-			{...props}
-			onFocus={onFocus}
-			onBlur={onBlur}
-			leftIcon={leftIcon}
-			rightIcon={rightIcon}
-			inputContainerStyle={inputContainerStyle}
-			labelStyle={labelStyle}
-			password={showPasswordText ? false : true}
-			secureTextEntry={showPasswordText ? false : true}
-			multiline={props?.multiline}
-			inputStyle={{
-				textAlignVertical: props?.multiline ? "top" : "center",
-				paddingTop: props?.multiline ? theme.spacing.sm : 0,
-			}}
-		/>
-	);
+    return (
+        <RNEInput
+            {...props}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            leftIcon={leftIcon}
+            rightIcon={rightIcon}
+            inputContainerStyle={inputContainerStyle}
+            labelStyle={labelStyle}
+            password={showPasswordText ? false : true}
+            secureTextEntry={showPasswordText ? false : true}
+            multiline={props?.multiline}
+            inputStyle={{
+                textAlignVertical: props?.multiline ? 'top' : 'center',
+            }}
+        />
+    );
 };
 
 Input.defaultProps = {
-	onFocus: () => null,
-	onBlur: () => null,
-	leftIcon: {},
-	rightIcon: {},
-	labelStyle: {},
-	password: false,
-	multiline: false,
+    onFocus: () => null,
+    onBlur: () => null,
+    leftIcon: {},
+    rightIcon: {},
+    labelStyle: {},
+    password: false,
+    multiline: false,
 };
 
 export default Input;

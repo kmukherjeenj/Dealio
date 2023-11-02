@@ -1,18 +1,14 @@
 import React, {useState} from 'react';
-import {Dimensions, FlatList, ScrollView, TouchableOpacity, View} from 'react-native';
-import {Image, makeStyles, Text, useTheme} from '@rneui/themed';
-import {STYLES} from '../global/styles';
-import {DEALS} from '../constant/mock-data';
-import Input from '../components/Input';
-import {AntDesign, Feather} from '@expo/vector-icons';
-import {LineChart, BarChart, PieChart, ProgressChart, ContributionGraph, StackedBarChart} from 'react-native-chart-kit';
+import {Dimensions, Platform, ScrollView, View} from 'react-native';
+import {makeStyles, Text, useTheme} from '@rneui/themed';
+import {LineChart, PieChart} from 'react-native-chart-kit';
 
 export default function AnalysisScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();
     const [search, setSearch] = useState('');
 
-    const goDetail = (data) => {
+    const goDetail = data => {
         navigation.navigate('DealDetail', {deal: data});
     };
 
@@ -69,11 +65,21 @@ export default function AnalysisScreen({navigation}) {
                             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                             datasets: [
                                 {
-                                    data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100],
+                                    data: [
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                    ],
                                 },
                             ],
                         }}
-                        width={Dimensions.get('window').width - theme.spacing.lg * 2} // from react-native
+                        width={
+                            Dimensions.get('window').width -
+                            theme.spacing.lg * 2
+                        } // from react-native
                         height={220}
                         yAxisLabel="$"
                         yAxisSuffix="k"
@@ -88,7 +94,10 @@ export default function AnalysisScreen({navigation}) {
                     <Text style={styles.subTitleText}>Traffic Sources</Text>
                     <PieChart
                         data={data1}
-                        width={Dimensions.get('window').width - theme.spacing.lg * 2}
+                        width={
+                            Dimensions.get('window').width -
+                            theme.spacing.lg * 2
+                        }
                         height={220}
                         chartConfig={chartConfig}
                         accessor={'population'}
@@ -109,12 +118,12 @@ export default function AnalysisScreen({navigation}) {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
         paddingHorizontal: theme.spacing.lg,
-        paddingTop: 50,
+        paddingTop: Platform.select({ios: 50, android: 20}),
     },
     body: {
         display: 'flex',

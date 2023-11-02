@@ -1,11 +1,17 @@
 import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {makeStyles, Text, Button, useThemeMode, useTheme} from '@rneui/themed';
+import {Platform, ScrollView, View} from 'react-native';
+import {makeStyles, Text, Button, useTheme} from '@rneui/themed';
 import Input from '../components/Input';
 import Checkbox from 'expo-checkbox';
 import {STYLES} from '../global/styles';
 import Selector from '../components/Selector';
-import {DEAL_SIZE, GEOGRAPHIES, INVESTMENT_SECTORS, INVESTMENT_SIZE, INVESTMENT_STAGES} from '../constant/mock-data';
+import {
+    DEAL_SIZE,
+    GEOGRAPHIES,
+    INVESTMENT_SECTORS,
+    INVESTMENT_SIZE,
+    INVESTMENT_STAGES,
+} from '../constant/mock-data';
 
 export default function EditAccountScreen({navigation}) {
     const styles = useStyles();
@@ -26,37 +32,37 @@ export default function EditAccountScreen({navigation}) {
         navigation.navigate('HomeNav');
     };
 
-    const onAddAccredited = (item) => {
+    const onAddAccredited = item => {
         setAccredited([item]);
     };
 
-    const onAddSectors = (item) => {
+    const onAddSectors = item => {
         if (sectors.includes(item)) {
-            setSectors(sectors.filter((el) => el !== item));
+            setSectors(sectors.filter(el => el !== item));
         } else {
             setSectors([...sectors, item]);
         }
     };
 
-    const onAddDeals = (item) => {
+    const onAddDeals = item => {
         setDeals([item]);
     };
 
-    const onAddInvestmentSize = (item) => {
+    const onAddInvestmentSize = item => {
         setInvestmentSize([item]);
     };
 
-    const onAddInvestmentStages = (item) => {
+    const onAddInvestmentStages = item => {
         if (investmentStages.includes(item)) {
-            setInvestmentStages(investmentStages.filter((el) => el !== item));
+            setInvestmentStages(investmentStages.filter(el => el !== item));
         } else {
             setInvestmentStages([...investmentStages, item]);
         }
     };
 
-    const onAddGeographies = (item) => {
+    const onAddGeographies = item => {
         if (geographies.includes(item)) {
-            setGeographies(geographies.filter((el) => el !== item));
+            setGeographies(geographies.filter(el => el !== item));
         } else {
             setGeographies([...geographies, item]);
         }
@@ -72,14 +78,14 @@ export default function EditAccountScreen({navigation}) {
                         titleStyle={{color: theme.colors.error}}
                         onPress={onClose}
                     />
-                    <Button
-                        title="Submit"
-                        type="clear"
-                        onPress={goList}
-                    />
+                    <Button title="Submit" type="clear" onPress={goList} />
                 </View>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <Text style={STYLES.mv12}>Account details are used for approving investors to events and effective matchmaking with co-investors, deals, requests and offers</Text>
+                    <Text style={STYLES.mv12}>
+                        Account details are used for approving investors to
+                        events and effective matchmaking with co-investors,
+                        deals, requests and offers
+                    </Text>
                     <View style={STYLES.mt12}>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                             <Text style={styles.fieldText}>Email</Text>
@@ -105,54 +111,46 @@ export default function EditAccountScreen({navigation}) {
                             <Text style={styles.fieldText}>Last name</Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder="Enter your last name"
-                            value="Cup"
-                        />
+                        <Input placeholder="Enter your last name" value="Cup" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>WhatsApp / Mobile (+country-phone)</Text>
+                            <Text style={styles.fieldText}>
+                                WhatsApp / Mobile (+country-phone)
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder="+country-phone"
-                            value=""
-                        />
+                        <Input placeholder="+country-phone" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Telegram (N/A if not available), we use Telegram for community groups</Text>
+                            <Text style={styles.fieldText}>
+                                Telegram (N/A if not available), we use Telegram
+                                for community groups
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder="@nickname"
-                            value=""
-                        />
+                        <Input placeholder="@nickname" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                             <Text style={styles.fieldText}>LinkedIn URL</Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder="Copy LinkedIn full URL"
-                            value=""
-                        />
+                        <Input placeholder="Copy LinkedIn full URL" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                             <Text style={styles.fieldText}>Company name</Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder=""
-                            value=""
-                        />
+                        <Input placeholder="" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Company website URL</Text>
+                            <Text style={styles.fieldText}>
+                                Company website URL
+                            </Text>
                         </View>
                         <Input />
                     </View>
@@ -174,27 +172,27 @@ export default function EditAccountScreen({navigation}) {
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>City of residency</Text>
+                            <Text style={styles.fieldText}>
+                                City of residency
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder=""
-                            value=""
-                        />
+                        <Input placeholder="" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Country of residency</Text>
+                            <Text style={styles.fieldText}>
+                                Country of residency
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder=""
-                            value=""
-                        />
+                        <Input placeholder="" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>What are your frequently visited cities?</Text>
+                            <Text style={styles.fieldText}>
+                                What are your frequently visited cities?
+                            </Text>
                         </View>
                         <Input placeholder="We can support you with introductions in these" />
                     </View>
@@ -205,96 +203,178 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Business Angel (investing my own capital into startups' equity)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Business Angel (investing my own capital into
+                                startups' equity)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Corporate VC - General Partner or Managing Partner or Partner (investing corporate capital)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Corporate VC - General Partner or Managing
+                                Partner or Partner (investing corporate capital)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Crypto Fund - General Partner or Managing Partner or Partner (investing LP capital)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Crypto Fund - General Partner or Managing
+                                Partner or Partner (investing LP capital)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Family Office Investment Manager (investing FO capital)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Family Office Investment Manager (investing FO
+                                capital)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Hedge Fund - General Partner or Managing Partner or Partner (investing LP capital)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Hedge Fund - General Partner or Managing Partner
+                                or Partner (investing LP capital)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Institutional Investor - Investment Manager</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Institutional Investor - Investment Manager
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Limited partner (investing my own capital into funds)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Limited partner (investing my own capital into
+                                funds)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Real Estate Investor or Real Estate Fund Manager</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Real Estate Investor or Real Estate Fund Manager
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Sovereign Wealth - Investment Manager</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Sovereign Wealth - Investment Manager
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>Sponsor (company interested to offer services to investors or their portfolio companies)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                Sponsor (company interested to offer services to
+                                investors or their portfolio companies)
+                            </Text>
                         </View>
                         <View style={[STYLES.row, STYLES.mb12]}>
                             <Checkbox
-                                color={checked ? theme.colors.primary : theme.colors.grey4}
+                                color={
+                                    checked
+                                        ? theme.colors.primary
+                                        : theme.colors.grey4
+                                }
                                 value={checked}
                                 onValueChange={setChecked}
                             />
-                            <Text style={[STYLES.ml12, styles.checkboxText]}>VC Fund - General partner or Managing Partner or Partner (investing LP capital)</Text>
+                            <Text style={[STYLES.ml12, styles.checkboxText]}>
+                                VC Fund - General partner or Managing Partner or
+                                Partner (investing LP capital)
+                            </Text>
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>Accredited investor</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                Accredited investor
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <View>
@@ -306,8 +386,16 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>Investment sectors</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                Investment sectors
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <View>
@@ -319,18 +407,26 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>How many investments have you made so far? (Type number)</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                How many investments have you made so far? (Type
+                                number)
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder=""
-                            value=""
-                        />
+                        <Input placeholder="" value="" />
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Protfolio companies</Text>
+                            <Text style={styles.fieldText}>
+                                Portfolio companies
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <Input
@@ -342,17 +438,26 @@ export default function EditAccountScreen({navigation}) {
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>What is your AUM $ value (Assets Under management in USD)?</Text>
+                            <Text style={styles.fieldText}>
+                                What is your AUM $ value (Assets Under
+                                management in USD)?
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
-                        <Input
-                            placeholder=""
-                            value=""
-                        />
+                        <Input placeholder="" value="" />
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>How many deals do you plan to make in the next 12 months?</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                How many deals do you plan to make in the next
+                                12 months?
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <View>
@@ -364,8 +469,16 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>Average investment size per company?</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                Average investment size per company?
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <View>
@@ -377,8 +490,16 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>Investment stages</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                Investment stages
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <View>
@@ -390,7 +511,13 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
                             <Text style={styles.fieldText}>Geographies</Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
@@ -403,8 +530,16 @@ export default function EditAccountScreen({navigation}) {
                         </View>
                     </View>
                     <View>
-                        <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                            <Text style={styles.fieldText}>Hobbies and interests</Text>
+                        <View
+                            style={[
+                                STYLES.row,
+                                STYLES.sb,
+                                STYLES.mb8,
+                                STYLES.mt20,
+                            ]}>
+                            <Text style={styles.fieldText}>
+                                Hobbies and interests
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <Input
@@ -416,7 +551,9 @@ export default function EditAccountScreen({navigation}) {
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>How did you hear about Dealio?</Text>
+                            <Text style={styles.fieldText}>
+                                How did you hear about Deelio?
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <Input
@@ -428,7 +565,10 @@ export default function EditAccountScreen({navigation}) {
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Why are you interested in joining Dealio? What are your goals?</Text>
+                            <Text style={styles.fieldText}>
+                                Why are you interested in joining Deelio? What
+                                are your goals?
+                            </Text>
                             <Text style={styles.requiredText}>Required</Text>
                         </View>
                         <Input
@@ -440,12 +580,11 @@ export default function EditAccountScreen({navigation}) {
                     </View>
                     <View>
                         <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                            <Text style={styles.fieldText}>Upload your profile photo</Text>
+                            <Text style={styles.fieldText}>
+                                Upload your profile photo
+                            </Text>
                         </View>
-                        <Input
-                            placeholder="Choose an image..."
-                            value=""
-                        />
+                        <Input placeholder="Choose an image..." value="" />
                     </View>
                     <View style={{height: 150}} />
                 </ScrollView>
@@ -454,13 +593,13 @@ export default function EditAccountScreen({navigation}) {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
     container: {
         flex: 1,
         backgroundColor: theme.colors.background,
         alignItems: 'center',
         paddingHorizontal: theme.spacing.lg,
-        paddingTop: 50,
+        paddingTop: Platform.select({ios: 50, android: 20}),
     },
     body: {
         display: 'flex',

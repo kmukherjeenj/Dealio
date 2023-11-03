@@ -38,6 +38,12 @@ export const STYLES = {
     ph12: {
         paddingHorizontal: 12,
     },
+    pv20: {
+        paddingVertical: 20,
+    },
+    ph20: {
+        paddingHorizontal: 20,
+    },
     row: {
         display: 'flex',
         flexDirection: 'row',

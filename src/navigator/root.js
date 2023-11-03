@@ -5,6 +5,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import AnalysisScreen from '../screens/Analysis';
 import DealListScreen from '../screens/DealList';
+import ProfileScreen from '../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,6 +49,16 @@ function RootNavigator() {
                             color={color}
                             size={size}
                         />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({color, size}) => (
+                        <FontAwesome5 name="user" color={color} size={size} />
                     ),
                 }}
             />

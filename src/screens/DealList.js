@@ -1,247 +1,356 @@
-import React, {useState} from 'react';
-import {FlatList, Platform, TouchableOpacity, View} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
 import {Image, makeStyles, Text, useTheme} from '@rneui/themed';
 import {STYLES} from '../global/styles';
-import {DEALS} from '../constant/mock-data';
-import Input from '../components/Input';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getDeals} from '../redux/action/action';
+import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-toast-message';
+import Carousel from 'react-native-reanimated-carousel';
+import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
+import {FirstUpperCase} from '../utils/uppercaseFirstLetter';
+import SERVER from '../server/server';
+import {Tabs} from 'react-native-collapsible-tab-view';
+import ROOM1 from '../assets/room0.jpg';
+import ROOM2 from '../assets/room1.jpg';
+import ROOM3 from '../assets/room2.jpg';
+import ROOM4 from '../assets/room3.jpg';
+import ROOM5 from '../assets/room4.jpg';
+import ROOM6 from '../assets/room5.jpg';
+import ROOM7 from '../assets/room6.jpg';
+import ROOM8 from '../assets/room7.jpg';
+
+const ROOM_IMG = [ROOM1, ROOM2, ROOM3, ROOM4, ROOM5, ROOM6, ROOM7, ROOM8];
+
+const width = Dimensions.get('window').width;
+
+const PAGE_HEIGHT = 450;
+const PAGE_WIDTH = width;
 
 export default function DealListScreen({navigation}) {
     const styles = useStyles();
+    const dispatch = useDispatch();
+    const deals = useSelector(state => state.deals);
+    const token = useSelector(state => state.token);
     const {theme} = useTheme();
-    const [search, setSearch] = useState('');
 
-    const goDetail = data => {
-        navigation.navigate('DealDetail', {deal: data});
-    };
+    const DATA = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-    const renderFooter = attrs => {
-        if (attrs?.length > 3) {
-            return (
-                <>
-                    {[0, 1, 2].map(i => (
-                        <View key={i} style={styles.attributeTextContainer}>
-                            <Text style={styles.attributeText}>{attrs[i]}</Text>
-                        </View>
-                    ))}
-                    <View
-                        style={[
-                            styles.attributeTextContainer,
-                            {backgroundColor: theme.colors.grey1},
-                        ]}>
-                        <Text style={styles.attributeText}>
-                            +{attrs?.length - 3}
-                        </Text>
-                    </View>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    {attrs?.map((attr, index) => (
-                        <View key={index} style={styles.attributeTextContainer}>
-                            <Text style={styles.attributeText}>{attr}</Text>
-                        </View>
-                    ))}
-                </>
-            );
+    useEffect(() => {
+        if (token) {
+            SERVER.defaults.headers.common.Authorization = `Bearer ${token}`;
+            getDeals(dispatch)
+                .then(res => {})
+                .catch(err => {
+                    Toast.show({
+                        type: 'error',
+                        text1: 'Error',
+                        text2: err,
+                    });
+                });
         }
+    }, [token, navigation]);
+
+    const pressAnim = useSharedValue(0);
+
+    const animationStyle = useCallback(value => {
+        'worklet';
+
+        const zIndex = interpolate(value, [-1, 0, 1], [-1000, 0, 1000]);
+        const translateX = interpolate(value, [-1, 0, 1], [-PAGE_WIDTH, 0, PAGE_WIDTH]);
+
+        return {
+            transform: [{translateX}],
+            zIndex,
+        };
+    }, []);
+
+    const renderHeader = () => {
+        return (
+            <Carousel
+                autoPlay
+                autoPlayInterval={3000}
+                width={PAGE_WIDTH}
+                height={PAGE_HEIGHT}
+                data={deals}
+                style={{
+                    width: PAGE_WIDTH,
+                    height: PAGE_HEIGHT - 60,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+                customAnimation={animationStyle}
+                onScrollBegin={() => {
+                    pressAnim.value = withTiming(1);
+                }}
+                onScrollEnd={() => {
+                    pressAnim.value = withTiming(0);
+                }}
+                scrollAnimationDuration={500}
+                onSnapToItem={index => {}}
+                renderItem={({item, index}) => {
+                    return <CustomItem key={`carousel-${index}`} index={index} navigation={navigation} item={item} pressAnim={pressAnim} />;
+                }}
+            />
+        );
     };
 
-    const DealItem = ({data}) => {
+    const renderItem = ({item, index}) => {
+        const goDetail = () => {
+            navigation.navigate('DealDetail', {deal: item, image: ROOM_IMG[index]});
+        };
+
         return (
-            <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                    goDetail(data);
-                }}>
-                <View style={styles.itemBoby}>
+            <TouchableOpacity style={[styles.listContainer, {backgroundColor: index % 2 === 0 ? theme.colors.white : '#FAFAFA'}]} onPress={goDetail}>
+                <View>
+                    <View style={[STYLES.row]}>
+                        <Ionicons name="home-outline" color={theme.colors.primary} size={14} />
+                        <Text style={[styles.locationText, {color: theme.colors.primary}]}>{item.company.name?.toUpperCase()}</Text>
+                    </View>
+                    <Text style={styles.listTitle}>{FirstUpperCase(item.title)}</Text>
                     <View>
-                        <Text style={styles.normalText}>
-                            <Text style={styles.dealNameText}>{data.name}</Text>
-                        </Text>
-                        <Text style={styles.normalText}>
-                            OWNER:{' '}
-                            <Text style={styles.nameText}>
-                                {data.ownerName}
+                        <View style={[STYLES.row]}>
+                            <Ionicons name="card-outline" color={theme.colors.warning} size={16} />
+                            <Text style={[styles.locationText, {color: theme.colors.grey2}]}>
+                                ${item.minMaxInvestmentAmount.min} - ${item.minMaxInvestmentAmount.max}
                             </Text>
-                        </Text>
-                        <Text style={styles.normalText}>
-                            PHONE:{' '}
-                            <Text style={styles.nameText}>
-                                {data.primaryContact}
-                            </Text>
-                        </Text>
-                        <View style={styles.investmentItemContainer}>
-                            <View style={styles.investmentTypeTextContainer}>
-                                <Text style={styles.investmentTypeText}>
-                                    {data.investmentType}
-                                </Text>
-                            </View>
-                            <View style={styles.investmentSizeTextContainer}>
-                                <Text style={styles.investmentSizeText}>
-                                    {data.investmentSize}
-                                </Text>
-                            </View>
+                        </View>
+                        <View style={[STYLES.row]}>
+                            <Ionicons name="time-outline" color={theme.colors.error} size={16} />
+                            <Text style={[styles.locationText, {color: theme.colors.grey2}]}>{item.dealDuration}</Text>
                         </View>
                     </View>
-                    <Image
-                        source={data.img}
-                        style={{height: 120, width: 90, resizeMode: 'contain'}}
-                    />
                 </View>
-                <View style={styles.itemFooter}>
-                    {renderFooter(data.attribute)}
+                <View>
+                    <Image source={ROOM_IMG[index]} style={styles.listImg} />
                 </View>
             </TouchableOpacity>
         );
     };
 
-    const DealHeader = ({date}) => {
-        return (
-            <View style={styles.header}>
-                <Text style={styles.headerText}>{date}</Text>
-            </View>
-        );
-    };
-
     return (
-        <View style={styles.container}>
-            <View style={styles.body}>
-                <Text h4>Deals</Text>
-                <View style={styles.searchContainer}>
-                    <Input
-                        placeholder="Search"
-                        value={search}
-                        onChangeText={setSearch}
-                        containerStyle={styles.searchInput}
-                        leftIcon={
-                            <Feather
-                                name="search"
-                                size={18}
-                                color={theme.colors.grey3}
-                            />
-                        }
-                        rightIcon={
-                            search && (
-                                <TouchableOpacity>
-                                    <AntDesign
-                                        name="close"
-                                        size={18}
-                                        color={theme.colors.grey1}
-                                    />
-                                </TouchableOpacity>
-                            )
-                        }
-                    />
+        <Tabs.Container
+            renderHeader={renderHeader}
+            renderTabBar={() => (
+                <View style={styles.listHeader}>
+                    <Image source={require('../assets/favicon.png')} style={{width: 34, height: 34, resizeMode: 'cover'}} />
+                    <Text style={[styles.subTitle, STYLES.ml8]}>FEATURED DEALS</Text>
                 </View>
-                <FlatList
-                    data={DEALS}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({item, index}) => {
-                        if (item.type === 'date') {
-                            return <DealHeader key={index} date={item.date} />;
-                        } else {
-                            return <DealItem key={index} data={item.data} />;
-                        }
-                    }}
-                    contentContainerStyle={[STYLES.wFull]}
-                    keyExtractor={item => item.id}
-                    ListFooterComponent={<View style={{height: 130}} />}
-                />
-            </View>
-        </View>
+            )}>
+            <Tabs.Tab name="deals">
+                <Tabs.FlatList data={deals} renderItem={renderItem} keyExtractor={v => v.id} />
+            </Tabs.Tab>
+        </Tabs.Container>
     );
 }
 
+const CustomItem = ({item, index, navigation, pressAnim}) => {
+    const styles = useStyles();
+    const {theme} = useTheme();
+
+    const animStyle = useAnimatedStyle(() => {
+        const scale = interpolate(pressAnim.value, [0, 1], [1, 0.9]);
+        const borderRadius = interpolate(pressAnim.value, [0, 1], [0, 30]);
+
+        return {
+            transform: [{scale}],
+            borderRadius,
+        };
+    }, []);
+
+    const goDetail = () => {
+        navigation.navigate('DealDetail', {deal: item, image: ROOM_IMG[index]});
+    };
+
+    return (
+        <Animated.View style={[{flex: 1, overflow: 'hidden'}, animStyle]} key={item.id}>
+            <Animated.Image source={ROOM_IMG[index]} resizeMode="cover" style={styles.itemImg} />
+            <TouchableOpacity style={styles.detailButton} onPress={goDetail}>
+                <MaterialIcons name="dashboard" size={20} color={theme.colors.white} />
+                <Text style={styles.detailButtonText}>View Detail</Text>
+            </TouchableOpacity>
+            <Animated.View style={styles.infoWrap}>
+                <Animated.Image source={ROOM_IMG[index]} resizeMethod="scale" blurRadius={40} style={styles.infoContainer} />
+                <Animated.View style={styles.infoView}>
+                    <Animated.Text style={styles.titleText}>{FirstUpperCase(item.title)}</Animated.Text>
+                    <Animated.View style={styles.companyContainer}>
+                        <Animated.View style={[STYLES.row]}>
+                            <Ionicons name="home-outline" color={theme.colors.primary} size={14} />
+                            <Animated.Text style={styles.locationText}>{item.company.name?.toUpperCase()}</Animated.Text>
+                        </Animated.View>
+                        <Animated.View style={[STYLES.row, {marginLeft: theme.spacing.lg}]}>
+                            <Ionicons name="logo-whatsapp" color={theme.colors.primary} size={14} />
+                            <Animated.Text style={styles.locationText}>{item.company.phone}</Animated.Text>
+                        </Animated.View>
+                    </Animated.View>
+                    <Animated.View style={styles.companyContainer}>
+                        <Animated.View style={[STYLES.row]}>
+                            <Ionicons name="location-outline" color={theme.colors.error} size={16} />
+                            <Animated.Text style={styles.locationText}>{item.company.location.address}</Animated.Text>
+                        </Animated.View>
+                        <Animated.View style={styles.returnContainer}>
+                            <Animated.Text style={styles.locationText}>{item.dealStructure.ownershipPercentageOffered}% Return</Animated.Text>
+                        </Animated.View>
+                    </Animated.View>
+                    <Animated.View style={[styles.companyContainer, {marginTop: theme.spacing.md}]}>
+                        <View style={{width: '50%'}}>
+                            <Animated.View style={[STYLES.row]}>
+                                <Ionicons name="card-outline" color={theme.colors.warning} size={16} />
+                                <Animated.Text style={styles.locationText}>Investment Range</Animated.Text>
+                            </Animated.View>
+                            <Animated.View style={[STYLES.row]}>
+                                <Animated.Text style={styles.valueText}>
+                                    ${item.minMaxInvestmentAmount.min} - ${item.minMaxInvestmentAmount.max}
+                                </Animated.Text>
+                            </Animated.View>
+                        </View>
+                        <View style={{width: '50%', paddingLeft: theme.spacing.lg}}>
+                            <Animated.View style={[STYLES.row]}>
+                                <Ionicons name="time-outline" color={theme.colors.error} size={16} />
+                                <Animated.Text style={styles.locationText}>Deal Duration</Animated.Text>
+                            </Animated.View>
+                            <Animated.View style={[STYLES.row]}>
+                                <Animated.Text style={styles.valueText}>{item.dealDuration}</Animated.Text>
+                            </Animated.View>
+                        </View>
+                    </Animated.View>
+                </Animated.View>
+            </Animated.View>
+        </Animated.View>
+    );
+};
+
 const useStyles = makeStyles(theme => ({
-    container: {
-        flex: 1,
-        backgroundColor: theme.colors.background,
-        paddingHorizontal: theme.spacing.lg,
-        paddingTop: Platform.select({ios: 50, android: 20}),
+    header: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: theme.colors.white,
+        paddingTop: Platform.select({ios: 56, android: 20}),
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.13,
+        shadowRadius: 2.62,
+        elevation: 11,
     },
-    body: {
+    titleText: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: theme.colors.white,
+    },
+    infoWrap: {
+        position: 'absolute',
+        bottom: 0,
+        zIndex: 2,
+        width: '100%',
+        marginBottom: 30,
+    },
+    infoContainer: {
+        width: '100%',
+        height: (PAGE_HEIGHT / 5) * 2,
+        borderTopLeftRadius: 60,
+        borderBottomRightRadius: 60,
+        position: 'absolute',
+    },
+    infoView: {
         display: 'flex',
         width: '100%',
+        height: (PAGE_HEIGHT / 5) * 2,
+        backgroundColor: '#00000047',
+        borderTopLeftRadius: 60,
+        borderBottomRightRadius: 60,
+        paddingHorizontal: theme.spacing.lg * 2,
+        paddingVertical: theme.spacing.lg,
     },
-    header: {
-        backgroundColor: theme.colors.searchBg,
-        paddingVertical: 10,
-        paddingHorizontal: theme.spacing.md,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.grey5,
+    itemImg: {
+        width: '100%',
+        height: (PAGE_HEIGHT / 5) * 3 + 30,
+        zIndex: 1,
     },
-    headerText: {},
-    item: {
-        paddingVertical: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.colors.greyOutline,
-        paddingHorizontal: theme.spacing.md,
-        display: 'flex',
-    },
-    itemBoby: {
+    companyContainer: {
+        marginVertical: theme.spacing.xs,
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    investmentSizeTextContainer: {
-        paddingVertical: theme.spacing.xs,
-        paddingHorizontal: theme.spacing.md,
-        backgroundColor: theme.colors.success,
-        marginTop: theme.spacing.xs,
-        borderRadius: 30,
-    },
-    investmentSizeText: {
-        color: theme.colors.white,
-    },
-    attributeTextContainer: {
-        paddingVertical: theme.spacing.xs,
-        paddingHorizontal: theme.spacing.md,
-        backgroundColor: theme.colors.grey4,
-        borderRadius: 30,
-        marginRight: theme.spacing.xs,
-        minWidth: 40,
         alignItems: 'center',
     },
-    attributeText: {
+    locationText: {
         color: theme.colors.white,
-        fontSize: 11,
+        fontSize: 12,
+        marginLeft: theme.spacing.xs,
     },
-    investmentTypeTextContainer: {
-        paddingVertical: theme.spacing.xs,
-        paddingHorizontal: theme.spacing.md,
-        backgroundColor: theme.colors.grey2,
-        borderRadius: 30,
-    },
-    investmentTypeText: {
-        color: theme.colors.white,
-    },
-    investmentItemContainer: {
+    returnContainer: {
+        backgroundColor: theme.colors.primary,
+        paddingHorizontal: theme.spacing.xs,
+        borderRadius: theme.spacing.xs,
+        marginLeft: theme.spacing.lg,
         display: 'flex',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
-        marginTop: theme.spacing.md,
     },
-    itemFooter: {
+    valueText: {
+        color: theme.colors.white,
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    subTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: theme.colors.black,
+    },
+    listHeader: {
         display: 'flex',
         flexDirection: 'row',
-        marginTop: theme.spacing.sm,
+        alignItems: 'flex-end',
+        paddingHorizontal: theme.spacing.lg,
+        paddingVertical: theme.spacing.lg,
+        height: Platform.select({ios: 90, android: 70}),
     },
-    normalText: {
-        color: theme.colors.grey4,
-        fontWeight: '300',
+    listContainer: {
+        paddingHorizontal: theme.spacing.lg,
+        paddingVertical: theme.spacing.lg,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
-    nameText: {},
-    dealNameText: {
+    listImg: {
+        width: 80,
+        height: 80,
+        borderRadius: theme.spacing.lg,
+        resizeMode: 'cover',
+    },
+    listTitle: {
+        fontSize: 18,
         fontWeight: 'bold',
-        fontSize: 16,
+        color: theme.colors.grey1,
+        marginTop: theme.spacing.xs,
+        marginBottom: theme.spacing.sm,
     },
-    searchContainer: {
-        marginTop: theme.spacing.md,
+    listAmount: {
+        fontSize: 12,
     },
-    searchInput: {
-        marginBottom: 0,
+    detailButton: {
+        position: 'absolute',
+        zIndex: 10,
+        top: Platform.select({ios: 90, android: 50}),
+        right: 20,
+        backgroundColor: theme.colors.primary,
+        paddingHorizontal: theme.spacing.lg,
+        paddingVertical: theme.spacing.sm,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 50,
+    },
+    detailButtonText: {
+        color: theme.colors.white,
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginLeft: theme.spacing.xs,
     },
 }));

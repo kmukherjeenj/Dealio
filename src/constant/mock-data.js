@@ -1,5 +1,58 @@
 import DEAL_IMG from '../assets/sign_doc.jpg';
 
+export const INVESTOR_TYPE = [
+    {
+        id: 1,
+        key: 'business_angle',
+        value: "Business Angel (investing my own capital into startups' equity)",
+    },
+    {
+        id: 2,
+        key: 'corporate_vc',
+        value: 'Corporate VC - General Partner or Managing Partner or Partner (investing corporate capital)',
+    },
+    {
+        id: 3,
+        key: 'crypto_fund',
+        value: 'Crypto Fund - General Partner or Managing Partner or Partner (investing LP capital)',
+    },
+    {
+        id: 4,
+        key: 'family_office',
+        value: 'Family Office Investment Manager (investing FO capital)',
+    },
+    {
+        id: 5,
+        key: 'hedge_fund',
+        value: 'Hedge Fund - General Partner or Managing Partner or Partner (investing LP capital)',
+    },
+    {
+        id: 6,
+        key: 'institutional_investor',
+        value: 'Institutional Investor - Investment Manager',
+    },
+    {
+        id: 7,
+        key: 'limited_partner',
+        value: 'Limited partner (investing my own capital into funds)',
+    },
+    {
+        id: 8,
+        key: 'sovereign_wealth',
+        value: 'Sovereign Wealth - Investment Manager',
+    },
+    {
+        id: 9,
+        key: 'sponsor',
+        value: 'Sponsor (company interested to offer services to investors or their portfolio companies)',
+    },
+    {
+        id: 10,
+        key: 'vc_fund',
+        value: 'VC Fund - General partner or Managing Partner or Partner (investing LP capital)',
+    },
+];
+
 export const INVESTMENT_SECTORS = [
     'Advertising',
     'AgTech',
@@ -84,7 +137,16 @@ export const INVESTMENT_SECTORS = [
 
 export const DEAL_SIZE = ['0', '1-5', '5-10', '10-15', '15-20', '20-30', '30-40', '50+'];
 
-export const INVESTMENT_SIZE = ['0-$10K', '$10k-$25K', '$25K-$50K', '$50K-$100K', '$100K-$500K', '$500K-$1M', '$1M-$5M', '$5M+'];
+export const INVESTMENT_SIZE = [
+    '0-$10K',
+    '$10k-$25K',
+    '$25K-$50K',
+    '$50K-$100K',
+    '$100K-$500K',
+    '$500K-$1M',
+    '$1M-$5M',
+    '$5M+',
+];
 
 export const INVESTMENT_STAGES = [
     'Pre-Seed',
@@ -98,14 +160,26 @@ export const INVESTMENT_STAGES = [
     'Series F',
     'Series H+',
     'Token Sale (SAFT)',
-    'Toke Sale',
+    'Token Sale',
     'Secondary Equity',
     'Secondary SAFT',
     'VC Fund',
     'Other',
 ];
 
-export const GEOGRAPHIES = ['North America', 'Europe', 'Israel', 'MENA', 'LATAM', 'Africa', 'India', 'South East Asia', 'China', 'Centeral Asia', 'Australia'];
+export const GEOGRAPHIES = [
+    'North America',
+    'Europe',
+    'Israel',
+    'MENA',
+    'LATAM',
+    'Africa',
+    'India',
+    'South East Asia',
+    'China',
+    'Centeral Asia',
+    'Australia',
+];
 
 export const DEALS = [
     {
@@ -117,7 +191,17 @@ export const DEALS = [
         id: 2,
         type: 'data',
         data: {
-            attribute: ['AR/VR', 'Medicine', 'Shopping', 'AR/VR', 'Medicine', 'Shopping', 'AR/VR', 'Medicine', 'Shopping'],
+            attribute: [
+                'AR/VR',
+                'Medicine',
+                'Shopping',
+                'AR/VR',
+                'Medicine',
+                'Shopping',
+                'AR/VR',
+                'Medicine',
+                'Shopping',
+            ],
             name: 'Popular Brands',
             summary: 'This is John Bill who want to make an investment. Thanks',
             investmentType: 'Series A',

@@ -1,6 +1,10 @@
 import React from 'react';
 import {createTheme, ThemeProvider} from '@rneui/themed';
-import Navigator from './src/navigator/navigator';
+import {Provider} from 'react-redux';
+import {store} from './src/redux/store';
+import Toast from 'react-native-toast-message';
+import {AppRoot} from './src/app';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const theme = createTheme({
     lightColors: {
@@ -84,8 +88,13 @@ const theme = createTheme({
 
 export default function App() {
     return (
-        <ThemeProvider theme={theme}>
-            <Navigator />
-        </ThemeProvider>
+        <GestureHandlerRootView style={{flex: 1}}>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <AppRoot />
+                </ThemeProvider>
+                <Toast position="top" autoHide visibilityTime={2000} topOffset={50} />
+            </Provider>
+        </GestureHandlerRootView>
     );
 }

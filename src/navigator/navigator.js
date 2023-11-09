@@ -6,21 +6,28 @@ import VerifyScreen from '../screens/Verify';
 import EditAccountScreen from '../screens/EditAccount';
 import DealDetailScreen from '../screens/DealDetail';
 import RootNavigator from './root';
+import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
+    const authed = useSelector(state => state.authed);
+
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Login" component={LoginScreen} />
-                <Stack.Screen name="Verify" component={VerifyScreen} />
-                <Stack.Screen
-                    name="EditAccount"
-                    component={EditAccountScreen}
-                />
-                <Stack.Screen name="HomeNav" component={RootNavigator} />
-                <Stack.Screen name="DealDetail" component={DealDetailScreen} />
+                {authed ? (
+                    <>
+                        <Stack.Screen name="HomeNav" component={RootNavigator} />
+                        <Stack.Screen name="DealDetail" component={DealDetailScreen} />
+                    </>
+                ) : (
+                    <>
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="Verify" component={VerifyScreen} />
+                        <Stack.Screen name="EditAccount" component={EditAccountScreen} />
+                    </>
+                )}
             </Stack.Navigator>
         </NavigationContainer>
     );

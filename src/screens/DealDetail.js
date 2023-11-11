@@ -61,6 +61,10 @@ export default function DealDetailScreen({navigation, route}) {
         ],
     };
 
+    const goSign = () => {
+        navigation.navigate('Signed');
+    };
+
     return (
         <PagerView style={styles.container} initialPage={0} orientation="vertical">
             <View key="1">
@@ -129,7 +133,7 @@ export default function DealDetailScreen({navigation, route}) {
                 <TouchableOpacity style={styles.backButton} onPress={goBack}>
                     <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.dealButton}>
+                <TouchableOpacity style={styles.dealButton} onPress={goSign}>
                     <FontAwesome5 name="hands-helping" size={22} color={theme.colors.white} />
                     <Text style={styles.dealButtonText}>Sign a Deal</Text>
                 </TouchableOpacity>
@@ -150,7 +154,7 @@ export default function DealDetailScreen({navigation, route}) {
                         <TouchableOpacity style={styles.secondPageHeaderButton} onPress={goBack}>
                             <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={goSign}>
                             <FontAwesome5 name="hands-helping" size={30} color={theme.colors.primary} />
                         </TouchableOpacity>
                     </View>

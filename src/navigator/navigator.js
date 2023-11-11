@@ -7,6 +7,7 @@ import EditAccountScreen from '../screens/EditAccount';
 import DealDetailScreen from '../screens/DealDetail';
 import RootNavigator from './root';
 import {useSelector} from 'react-redux';
+import PDFViewer from '../screens/PDFViewer';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const Navigator = () => {
                     <>
                         <Stack.Screen name="HomeNav" component={RootNavigator} />
                         <Stack.Screen name="DealDetail" component={DealDetailScreen} />
+                        <Stack.Screen name="PDFViewer" component={PDFViewer} />
                     </>
                 ) : (
                     <>

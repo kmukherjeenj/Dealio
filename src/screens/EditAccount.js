@@ -1,22 +1,40 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Platform, ScrollView, TouchableOpacity, View} from 'react-native';
 import * as yup from 'yup';
 import {makeStyles, Text, Button, useTheme} from '@rneui/themed';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Input from '../components/Input';
 import Checkbox from 'expo-checkbox';
 import {STYLES} from '../global/styles';
-import Selector from '../components/Selector';
-import {DEAL_SIZE, GEOGRAPHIES, INVESTMENT_SECTORS, INVESTMENT_SIZE, INVESTMENT_STAGES, INVESTOR_TYPE} from '../constant/mock-data';
+import {INVESTOR_TYPE} from '../constant/mock-data';
 import {useDispatch, useSelector} from 'react-redux';
 import {Formik, FieldArray} from 'formik';
 import {register} from '../redux/action/action';
 import Toast from 'react-native-toast-message';
 
+const options = {
+    componentRestrictions: {country: 'us'},
+    fields: ['address_components', 'geometry', 'icon', 'name', 'formatted_address'],
+    types: ['address'],
+};
+
 export default function EditAccountScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();
+    const ref = useRef(null);
     const dispatch = useDispatch();
     const email = useSelector(state => state.email);
+    const [address, setAddress] = useState('');
+    const [error, setError] = useState(false);
+    const [searchFocused, setSearchFocused] = useState(false);
+
+    useEffect(() => {
+        if (address) {
+            setError(false);
+        } else {
+            setError(true);
+        }
+    }, [address]);
 
     const schema = yup.object().shape({
         email: yup.string(),
@@ -29,28 +47,8 @@ export default function EditAccountScreen({navigation}) {
             .min(2, ({min}) => `Last Name must be at least ${min} characters`)
             .required('Last Name is required'),
         phone: yup.string().required('Whatsapp/Mobile is required'),
-        telegram: yup.string().required('Telegram is required'),
-        linkedin: yup.string().required('Linkedin is required'),
         companyName: yup.string().required('Company Name is required'),
-        companyWebsite: yup.string(),
-        jobTitle: yup.string(),
-        shortBio: yup.string(),
-        cityOfResidency: yup.string().required('City of Residency is required'),
-        countryOfResidency: yup.string().required('Country of Residency is required'),
-        visitedCities: yup.string(),
         investorType: yup.array().min(1, 'At least one investor type is required').required('Investor Types is required'),
-        accreditedInvestor: yup.array().min(1, 'Accredited investor is required').required('Accredited investor is required'),
-        investmentSectors: yup.array().min(1, 'At least one investment sector is required').required('Investment sectors is required'),
-        pastInvestmentSize: yup.string().required('Past Investment Size is required'),
-        portfolioCompanies: yup.string().required('Portfolio Companies is required'),
-        aumValue: yup.string().required('AUM Value is required'),
-        dealsSize: yup.array().min(1, 'Deals Plan is required').required('Deals Plan is required'),
-        investmentSize: yup.array().min(1, 'Investment Size is required').required('Investment Size is required'),
-        investmentStages: yup.array().min(1, 'At least one investment stage is required').required('Investment Stages is required'),
-        geographies: yup.array().min(1, 'At least one Geographies is required').required('Geographies is required'),
-        hobbies: yup.string().required('Hobbies is required'),
-        heardAboutUs: yup.string().required('How did you hear about us is required'),
-        whyInterest: yup.string().required('Why did you intrested us?'),
     });
 
     const onClose = () => {
@@ -58,12 +56,10 @@ export default function EditAccountScreen({navigation}) {
     };
 
     const goRegister = values => {
-        register(dispatch, {
-            ...values,
-            accreditedInvestor: values.accreditedInvestor[0],
-            dealsSize: values.dealsSize[0],
-            investmentSize: values.investmentSize[0],
-        })
+        if (error) {
+            return;
+        }
+        register(dispatch, values)
             .then(res => {
                 navigation.navigate('HomeNav');
             })
@@ -86,28 +82,8 @@ export default function EditAccountScreen({navigation}) {
                         firstName: '',
                         lastName: '',
                         phone: '',
-                        telegram: '',
-                        linkedin: '',
                         companyName: '',
-                        companyWebsite: '',
-                        jobTitle: '',
-                        shortBio: '',
-                        cityOfResidency: '',
-                        countryOfResidency: '',
-                        visitedCities: '',
                         investorType: [],
-                        accreditedInvestor: [],
-                        investmentSectors: [],
-                        pastInvestmentSize: '',
-                        portfolioCompanies: '',
-                        aumValue: '',
-                        dealsSize: [],
-                        investmentSize: [],
-                        investmentStages: [],
-                        geographies: [],
-                        hobbies: '',
-                        heardAboutUs: '',
-                        whyInterest: '',
                     }}
                     onSubmit={goRegister}>
                     {({handleChange, handleSubmit, values, errors, isValid}) => (
@@ -116,23 +92,20 @@ export default function EditAccountScreen({navigation}) {
                                 <Button title="Back" type="clear" titleStyle={{color: theme.colors.error}} onPress={onClose} />
                                 <Button title="Submit" type="clear" onPress={handleSubmit} />
                             </View>
-                            <ScrollView showsVerticalScrollIndicator={false}>
+                            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="always">
                                 <Text style={STYLES.mv12}>
                                     Account details are used for approving investors to events and effective matchmaking with co-investors, deals, requests and
-                                    offers
-                                    {errors.investorType}
+                                    offers.
                                 </Text>
                                 <View style={STYLES.mt12}>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                                         <Text style={styles.fieldText}>Email</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
                                     </View>
                                     <Input placeholder="Enter your email" value={email} />
                                 </View>
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                                         <Text style={styles.fieldText}>First name</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
                                     </View>
                                     <Input
                                         placeholder="Enter your first name"
@@ -144,7 +117,6 @@ export default function EditAccountScreen({navigation}) {
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                                         <Text style={styles.fieldText}>Last name</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
                                     </View>
                                     <Input
                                         placeholder="Enter your last name"
@@ -155,11 +127,10 @@ export default function EditAccountScreen({navigation}) {
                                 </View>
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>WhatsApp / Mobile (+country-phone)</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
+                                        <Text style={styles.fieldText}>WhatsApp / Mobile</Text>
                                     </View>
                                     <Input
-                                        placeholder="+country-phone"
+                                        placeholder="Phone number"
                                         value={values.phone}
                                         onChangeText={handleChange('phone')}
                                         errorMessage={errors.phone}
@@ -168,35 +139,10 @@ export default function EditAccountScreen({navigation}) {
                                 </View>
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Telegram (N/A if not available), we use Telegram for community groups</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder="@nickname"
-                                        value={values.telegram}
-                                        onChangeText={handleChange('telegram')}
-                                        errorMessage={errors.telegram}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>LinkedIn URL</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder="Copy LinkedIn full URL"
-                                        value={values.linkedin}
-                                        onChangeText={handleChange('linkedin')}
-                                        errorMessage={errors.linkedin}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                                         <Text style={styles.fieldText}>Company name</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
                                     </View>
                                     <Input
-                                        placeholder=""
+                                        placeholder="Company name"
                                         value={values.companyName}
                                         onChangeText={handleChange('companyName')}
                                         errorMessage={errors.companyName}
@@ -204,66 +150,52 @@ export default function EditAccountScreen({navigation}) {
                                 </View>
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Company website URL</Text>
+                                        <Text style={styles.fieldText}>Address</Text>
                                     </View>
-                                    <Input placeholder="" value={values.companyWebsite} onChangeText={handleChange('companyWebsite')} />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Job title</Text>
-                                    </View>
-                                    <Input value={values.jobTitle} onChangeText={handleChange('jobTitle')} />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Short Bio</Text>
-                                    </View>
-                                    <Input
-                                        multiline
-                                        placeholder="Your bio will be presented on your Investor Profile so other members could learn more about you and reach out"
-                                        style={{height: 130}}
-                                        value={values.shortBio}
-                                        onChangeText={handleChange('shortBio')}
+                                    <GooglePlacesAutocomplete
+                                        ref={ref}
+                                        placeholder="Search your address"
+                                        onPress={(data, details = null) => {
+                                            setAddress(data.description);
+                                        }}
+                                        listViewDisplayed={false}
+                                        query={{
+                                            key: 'AIzaSyAFF1M2AeYt8ZL5I72nwy6B1nEVS8mSxmU',
+                                            language: 'en',
+                                            types: 'address',
+                                            components: 'country:us',
+                                        }}
+                                        textInputProps={{
+                                            placeholderTextColor: theme.colors.grey3,
+                                            onFocus: () => setSearchFocused(true),
+                                            onBlur: () => setSearchFocused(false),
+                                        }}
+                                        styles={{
+                                            textInput: {
+                                                borderWidth: 1,
+                                                borderColor: searchFocused ? theme.colors.primary : theme.colors.grey4,
+                                                borderRadius: theme.spacing.md,
+                                                paddingHorizontal: theme.spacing.lg,
+                                                height: 50,
+                                                marginBottom: theme.spacing.lg,
+                                                color: theme.colors.grey0,
+                                            },
+                                            description: {
+                                                color: theme.colors.grey3,
+                                            },
+                                            listView: {
+                                                marginTop: -16,
+                                            },
+                                            row: {
+                                                backgroundColor: '#F0F0F0',
+                                            },
+                                        }}
                                     />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>City of residency</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder=""
-                                        value={values.cityOfResidency}
-                                        onChangeText={handleChange('cityOfResidency')}
-                                        errorMessage={errors.cityOfResidency}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Country of residency</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder=""
-                                        value={values.countryOfResidency}
-                                        onChangeText={handleChange('countryOfResidency')}
-                                        errorMessage={errors.countryOfResidency}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>What are your frequently visited cities?</Text>
-                                    </View>
-                                    <Input
-                                        placeholder="We can support you with introductions in these"
-                                        value={values.visitedCities}
-                                        onChangeText={handleChange('visitedCities')}
-                                    />
+                                    {error && <Text style={styles.errorText}>Address is required.</Text>}
                                 </View>
                                 <View>
                                     <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
                                         <Text style={styles.fieldText}>Investor type</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
                                     </View>
                                     {errors.investorType && (
                                         <Text
@@ -306,293 +238,6 @@ export default function EditAccountScreen({navigation}) {
                                         }}
                                     </FieldArray>
                                 </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Accredited investor</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.accreditedInvestor && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.accreditedInvestor}
-                                        </Text>
-                                    )}
-                                    <View>
-                                        <FieldArray name="accreditedInvestor">
-                                            {({push, remove}) => (
-                                                <Selector
-                                                    data={['Yes', 'No', 'Not Sure']}
-                                                    selectedItems={values.accreditedInvestor}
-                                                    onAdd={item => {
-                                                        values.accreditedInvestor?.map((item, index) => remove(index));
-                                                        push(item);
-                                                    }}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Investment sectors</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.investmentSectors && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.investmentSectors}
-                                        </Text>
-                                    )}
-                                    <FieldArray name="investmentSectors">
-                                        {({push, remove}) => (
-                                            <Selector
-                                                data={INVESTMENT_SECTORS}
-                                                selectedItems={values.investmentSectors}
-                                                onAdd={item => {
-                                                    if (values.investmentSectors.includes(item)) {
-                                                        remove(values.investmentSectors.indexOf(item));
-                                                    } else {
-                                                        push(item);
-                                                    }
-                                                }}
-                                            />
-                                        )}
-                                    </FieldArray>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>How many investments have you made so far? (Type number)</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder=""
-                                        value={values.pastInvestmentSize}
-                                        onChangeText={handleChange('pastInvestmentSize')}
-                                        errorMessage={errors.pastInvestmentSize}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Portfolio companies</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        multiline
-                                        placeholder="Share names of portfolio companies (bullets or comma separated)"
-                                        value={values.portfolioCompanies}
-                                        onChangeText={handleChange('portfolioCompanies')}
-                                        errorMessage={errors.portfolioCompanies}
-                                        style={{height: 80}}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>What is your AUM $ value (Assets Under management in USD)?</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        placeholder=""
-                                        value={values.aumValue}
-                                        onChangeText={handleChange('aumValue')}
-                                        errorMessage={errors.aumValue}
-                                        keyboardType="numeric"
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>How many deals do you plan to make in the next 12 months?</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.dealsSize && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.dealsSize}
-                                        </Text>
-                                    )}
-                                    <View>
-                                        <FieldArray name="dealsSize">
-                                            {({push, remove}) => (
-                                                <Selector
-                                                    data={DEAL_SIZE}
-                                                    selectedItems={values.dealsSize}
-                                                    onAdd={item => {
-                                                        values.dealsSize?.map((item, index) => remove(index));
-                                                        push(item);
-                                                    }}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Average investment size per company?</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.investmentSize && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.investmentSize}
-                                        </Text>
-                                    )}
-                                    <View>
-                                        <FieldArray name="investmentSize">
-                                            {({remove, push}) => (
-                                                <Selector
-                                                    data={INVESTMENT_SIZE}
-                                                    selectedItems={values.investmentSize}
-                                                    onAdd={item => {
-                                                        values.investmentSize?.map((item, index) => remove(index));
-                                                        push(item);
-                                                    }}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Investment stages</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.investmentStages && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.investmentStages}
-                                        </Text>
-                                    )}
-                                    <View>
-                                        <FieldArray name="investmentStages">
-                                            {({remove, push}) => (
-                                                <Selector
-                                                    data={INVESTMENT_STAGES}
-                                                    selectedItems={values.investmentStages}
-                                                    onAdd={item => {
-                                                        if (values.investmentStages.includes(item)) {
-                                                            remove(values.investmentStages.indexOf(item));
-                                                        } else {
-                                                            push(item);
-                                                        }
-                                                    }}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Geographies</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    {errors.geographies && (
-                                        <Text
-                                            style={[
-                                                styles.requiredText,
-                                                {
-                                                    color: theme.colors.error,
-                                                    marginBottom: theme.spacing.sm,
-                                                },
-                                            ]}>
-                                            {errors.geographies}
-                                        </Text>
-                                    )}
-                                    <View>
-                                        <FieldArray name="geographies">
-                                            {({remove, push}) => (
-                                                <Selector
-                                                    data={GEOGRAPHIES}
-                                                    selectedItems={values.geographies}
-                                                    onAdd={item => {
-                                                        if (values.geographies.includes(item)) {
-                                                            remove(values.geographies.indexOf(item));
-                                                        } else {
-                                                            push(item);
-                                                        }
-                                                    }}
-                                                />
-                                            )}
-                                        </FieldArray>
-                                    </View>
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8, STYLES.mt20]}>
-                                        <Text style={styles.fieldText}>Hobbies and interests</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        multiline
-                                        placeholder="Share your hobbies and interests to get match to others"
-                                        value={values.hobbies}
-                                        onChangeText={handleChange('hobbies')}
-                                        errorMessage={errors.hobbies}
-                                        style={{height: 80}}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>How did you hear about Deelio?</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        multiline
-                                        placeholder="Were you referred by anyone? Please provide their name"
-                                        value={values.heardAboutUs}
-                                        onChangeText={handleChange('heardAboutUs')}
-                                        errorMessage={errors.heardAboutUs}
-                                        style={{height: 80}}
-                                    />
-                                </View>
-                                <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Why are you interested in joining Deelio? What are your goals?</Text>
-                                        <Text style={styles.requiredText}>Required</Text>
-                                    </View>
-                                    <Input
-                                        multiline
-                                        placeholder="Our mission is to help you grow and achieve your goals"
-                                        value={values.whyInterest}
-                                        onChangeText={handleChange('whyInterest')}
-                                        errorMessage={errors.whyInterest}
-                                        style={{height: 80}}
-                                    />
-                                </View>
-                                {/* <View>
-                                    <View style={[STYLES.row, STYLES.sb, STYLES.mb8]}>
-                                        <Text style={styles.fieldText}>Upload your profile photo</Text>
-                                    </View>
-                                    <Input placeholder="Choose an image..." value="" />
-                                </View> */}
                                 <View style={{height: 150}} />
                             </ScrollView>
                         </>
@@ -628,5 +273,10 @@ const useStyles = makeStyles(theme => ({
     checkboxText: {
         maxWidth: '90%',
         fontWeight: '300',
+    },
+    errorText: {
+        fontSize: 12,
+        color: theme.colors.error,
+        marginTop: -6,
     },
 }));

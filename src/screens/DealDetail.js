@@ -1,15 +1,10 @@
-import React, {useState} from 'react';
-import {Dimensions, ImageBackground, Linking, Platform, ScrollView, TouchableOpacity, View, StyleSheet} from 'react-native';
-import {makeStyles, Text, useTheme, Image, Button} from '@rneui/themed';
+import React from 'react';
+import {Dimensions, ImageBackground, Platform, ScrollView, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {makeStyles, Text, useTheme, Image, AirbnbRating} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ImageView from 'react-native-image-viewing';
-import ROOM1 from '../assets/room0.jpg';
-import ROOM2 from '../assets/room1.jpg';
-import ROOM3 from '../assets/room2.jpg';
 import {FirstUpperCase} from '../utils/uppercaseFirstLetter';
 import PagerView from 'react-native-pager-view';
 import Icon from 'react-native-vector-icons/Feather';
@@ -26,11 +21,6 @@ export default function DealDetailScreen({navigation, route}) {
     const styles = useStyles();
     const {theme} = useTheme();
     const {deal, image} = route.params;
-    const [fullImg, setFullImg] = useState(false);
-
-    const goLink = url => {
-        Linking.openURL(url);
-    };
 
     const goBack = () => {
         navigation.goBack();
@@ -71,17 +61,6 @@ export default function DealDetailScreen({navigation, route}) {
         ],
     };
 
-    const chartConfig1 = {
-        backgroundGradientFrom: theme.colors.primary,
-        backgroundGradientFromOpacity: 1,
-        backgroundGradientTo: theme.colors.primary,
-        backgroundGradientToOpacity: 1,
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        strokeWidth: 2, // optional, default 3
-        barPercentage: 0.5,
-        useShadowColorFromDataset: false, // optional
-    };
-
     return (
         <PagerView style={styles.container} initialPage={0} orientation="vertical">
             <View key="1">
@@ -91,6 +70,10 @@ export default function DealDetailScreen({navigation, route}) {
                             <Image source={image} style={styles.mainImage} />
                             <View style={styles.firstPageBody}>
                                 <Text style={styles.titleText}>{FirstUpperCase(deal.title)}</Text>
+                                <View style={styles.ratingContainer}>
+                                    <AirbnbRating size={22} isDisabled showRating={false} readonly defaultRating={5} />
+                                    <Text style={styles.ratingText}>5.0</Text>
+                                </View>
                                 <View style={styles.companyContainer}>
                                     <View style={[STYLES.row]}>
                                         <Ionicons name="home-outline" color={theme.colors.primary} size={14} />
@@ -288,7 +271,7 @@ export default function DealDetailScreen({navigation, route}) {
                                 {deal.legalAndCompliance.attachments.map((item, index) => (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            goLink(item.url);
+                                            navigation.navigate('PDFViewer', {uri: item.url, name: item.name});
                                         }}
                                         style={styles.attachment}
                                         key={index}>
@@ -521,5 +504,16 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    ratingContainer: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    ratingText: {
+        fontSize: 20,
+        color: theme.colors.primary,
+        marginLeft: theme.spacing.xs,
     },
 }));

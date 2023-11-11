@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
-import {Image, makeStyles, Text, useTheme} from '@rneui/themed';
+import {Image, makeStyles, Text, Rating, AirbnbRating, useTheme} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -70,7 +70,7 @@ export default function DealListScreen({navigation}) {
         return (
             <Carousel
                 autoPlay
-                autoPlayInterval={3000}
+                autoPlayInterval={5000}
                 width={PAGE_WIDTH}
                 height={PAGE_HEIGHT}
                 data={deals}
@@ -109,6 +109,10 @@ export default function DealListScreen({navigation}) {
                         <Text style={[styles.locationText, {color: theme.colors.primary}]}>{item.company.name?.toUpperCase()}</Text>
                     </View>
                     <Text style={styles.listTitle}>{FirstUpperCase(item.title)}</Text>
+                    <View style={styles.listRatingContainer}>
+                        <AirbnbRating size={14} isDisabled showRating={false} readonly defaultRating={5} />
+                        <Text style={{color: theme.colors.warning}}>5.0</Text>
+                    </View>
                     <View>
                         <View style={[STYLES.row]}>
                             <Ionicons name="card-outline" color={theme.colors.warning} size={16} />
@@ -170,10 +174,16 @@ const CustomItem = ({item, index, navigation, pressAnim}) => {
                 <MaterialIcons name="dashboard" size={20} color={theme.colors.white} />
                 <Text style={styles.detailButtonText}>View Detail</Text>
             </TouchableOpacity>
+            <Animated.View style={styles.ratingContainer}>
+                <AirbnbRating size={22} isDisabled showRating={false} readonly defaultRating={5} />
+                <Animated.Text style={styles.ratingText}>5.0</Animated.Text>
+            </Animated.View>
             <Animated.View style={styles.infoWrap}>
                 <Animated.Image source={ROOM_IMG[index]} resizeMethod="scale" blurRadius={40} style={styles.infoContainer} />
                 <Animated.View style={styles.infoView}>
-                    <Animated.Text style={styles.titleText}>{FirstUpperCase(item.title)}</Animated.Text>
+                    <View style={[STYLES.row, STYLES.alignC, {justifyContent: 'space-between'}]}>
+                        <Animated.Text style={styles.titleText}>{FirstUpperCase(item.title)}</Animated.Text>
+                    </View>
                     <Animated.View style={styles.companyContainer}>
                         <Animated.View style={[STYLES.row]}>
                             <Ionicons name="home-outline" color={theme.colors.primary} size={14} />
@@ -275,7 +285,6 @@ const useStyles = makeStyles(theme => ({
         marginVertical: theme.spacing.xs,
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
     },
     locationText: {
         color: theme.colors.white,
@@ -352,5 +361,27 @@ const useStyles = makeStyles(theme => ({
         fontSize: 14,
         fontWeight: 'bold',
         marginLeft: theme.spacing.xs,
+    },
+    ratingContainer: {
+        display: 'flex',
+        alignItems: 'flex-start',
+        position: 'absolute',
+        zIndex: 10,
+        bottom: 220,
+        right: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    ratingText: {
+        fontSize: 20,
+        color: theme.colors.primary,
+        marginLeft: theme.spacing.xs,
+    },
+    listRatingContainer: {
+        display: 'flex',
+        marginTop: -8,
+        flexDirection: 'row',
+        marginVertical: theme.spacing.xs,
+        alignItems: 'center',
     },
 }));

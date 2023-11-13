@@ -23,6 +23,7 @@ import ROOM4 from '../assets/room3.jpg';
 import ROOM5 from '../assets/room4.jpg';
 import ROOM6 from '../assets/room5.jpg';
 import Animated from 'react-native-reanimated';
+import {makeShort} from '../utils/makeShort';
 
 const ROOM_IMG = [ROOM1, ROOM2, ROOM3, ROOM4, ROOM5, ROOM6];
 
@@ -129,7 +130,7 @@ export default function DealDetailScreen({navigation, route}) {
                                 <View style={styles.companyContainer}>
                                     <View style={[STYLES.row]}>
                                         <Ionicons name="location-outline" color={theme.colors.error} size={16} />
-                                        <Text style={styles.locationText}>{deal.company.location.address}</Text>
+                                        <Text style={styles.locationText}>{makeShort(deal.company.location.address, 36)}</Text>
                                     </View>
                                     <View style={styles.returnContainer}>
                                         <Text style={styles.locationText}>{deal.dealStructure.ownershipPercentageOffered}% Return</Text>
@@ -222,6 +223,35 @@ export default function DealDetailScreen({navigation, route}) {
                         </View>
                         <View style={styles.list}>
                             <View style={styles.listHeader}>
+                                <MaterialIcons name="location-pin" size={20} color={theme.colors.primary} />
+                                <Text style={styles.subTitle}>PROJECT LOCATION</Text>
+                            </View>
+                            <View style={styles.listBody}>
+                                <View style={[STYLES.row, STYLES.alignC, STYLES.mb8]}>
+                                    <Text style={[styles.listText, {marginLeft: theme.spacing.xs}]}>{'Greenville, North Carolina'}</Text>
+                                </View>
+                                <View style={styles.mapView}>
+                                    <MapView
+                                        mapType="standard"
+                                        style={styles.map}
+                                        region={{
+                                            latitude: 35.6127,
+                                            longitude: -77.3664,
+                                            latitudeDelta: 0.0115,
+                                            longitudeDelta: 0.01121,
+                                        }}>
+                                        <Marker
+                                            coordinate={{
+                                                latitude: 35.6127,
+                                                longitude: -77.3664,
+                                            }}
+                                        />
+                                    </MapView>
+                                </View>
+                            </View>
+                        </View>
+                        {/* <View style={styles.list}>
+                            <View style={styles.listHeader}>
                                 <MaterialIcons name="video-collection" size={20} color={theme.colors.primary} />
                                 <Text style={styles.subTitle}>ABOUT US</Text>
                             </View>
@@ -233,7 +263,7 @@ export default function DealDetailScreen({navigation, route}) {
                                     onChangeState={() => {}}
                                 />
                             </View>
-                        </View>
+                        </View> */}
                         <View style={styles.list}>
                             <View style={styles.listHeader}>
                                 <Ionicons name="images" size={18} color={theme.colors.primary} />

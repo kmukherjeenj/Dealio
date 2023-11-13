@@ -1,6 +1,6 @@
-import React from 'react';
-import {Dimensions, ImageBackground, Platform, ScrollView, TouchableOpacity, View, StyleSheet} from 'react-native';
-import {makeStyles, Text, useTheme, Image, AirbnbRating} from '@rneui/themed';
+import React, {useState} from 'react';
+import {Dimensions, ImageBackground, Platform, ScrollView, TouchableOpacity, View, StyleSheet, Pressable} from 'react-native';
+import {makeStyles, Text, useTheme, AirbnbRating} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,16 +11,32 @@ import Icon from 'react-native-vector-icons/Feather';
 import * as Animatable from 'react-native-animatable';
 import MapView, {Marker} from 'react-native-maps';
 import {BarChart, LineChart, ProgressChart} from 'react-native-chart-kit';
+import YoutubePlayer from 'react-native-youtube-iframe';
+import Carousel from 'react-native-reanimated-carousel';
+import ImageView from 'react-native-image-viewing';
+import FastImage from 'react-native-fast-image';
+
+import ROOM1 from '../assets/room0.jpg';
+import ROOM2 from '../assets/room1.jpg';
+import ROOM3 from '../assets/room2.jpg';
+import ROOM4 from '../assets/room3.jpg';
+import ROOM5 from '../assets/room4.jpg';
+import ROOM6 from '../assets/room5.jpg';
+import Animated from 'react-native-reanimated';
+
+const ROOM_IMG = [ROOM1, ROOM2, ROOM3, ROOM4, ROOM5, ROOM6];
 
 const AnimatedIcon = Animatable.createAnimatableComponent(Icon);
 
-const height = Dimensions.get('window').height;
-const width = Dimensions.get('window').width;
+const HEIGHT = Dimensions.get('window').height;
+const WIDTH = Dimensions.get('window').width;
 
 export default function DealDetailScreen({navigation, route}) {
     const styles = useStyles();
     const {theme} = useTheme();
-    const {deal, image} = route.params;
+    const [fullImageVisible, setFullImageVisible] = useState(false);
+    const [fullImageIndex, setFullImageIndex] = useState(0);
+    const {deal} = route.params;
 
     const goBack = () => {
         navigation.goBack();
@@ -65,13 +81,35 @@ export default function DealDetailScreen({navigation, route}) {
         navigation.navigate('Signed');
     };
 
+    const goChat = () => {
+        navigation.navigate('Chat');
+    };
+
+    const Item = ({imageSource, onPress, entering}) => {
+        return (
+            <Pressable onPress={onPress}>
+                <Animated.View entering={entering}>
+                    <Animated.Image
+                        source={imageSource}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: theme.spacing.md,
+                        }}
+                        resizeMode="cover"
+                    />
+                </Animated.View>
+            </Pressable>
+        );
+    };
+
     return (
         <PagerView style={styles.container} initialPage={0} orientation="vertical">
             <View key="1">
                 <View style={styles.firstPage}>
-                    <ImageBackground source={image} resizeMethod="scale" blurRadius={40} style={styles.imgBackground}>
+                    <ImageBackground source={{uri: deal.mainImage}} resizeMethod="scale" blurRadius={40} style={styles.imgBackground}>
                         <View style={{backgroundColor: '#000000A0', height: '100%'}}>
-                            <Image source={image} style={styles.mainImage} />
+                            <FastImage source={{uri: deal.mainImage}} style={styles.mainImage} />
                             <View style={styles.firstPageBody}>
                                 <Text style={styles.titleText}>{FirstUpperCase(deal.title)}</Text>
                                 <View style={styles.ratingContainer}>
@@ -133,10 +171,16 @@ export default function DealDetailScreen({navigation, route}) {
                 <TouchableOpacity style={styles.backButton} onPress={goBack}>
                     <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.dealButton} onPress={goSign}>
-                    <FontAwesome5 name="hands-helping" size={22} color={theme.colors.white} />
-                    <Text style={styles.dealButtonText}>Sign a Deal</Text>
-                </TouchableOpacity>
+                <View style={styles.buttonGroup}>
+                    <TouchableOpacity style={styles.dealButton} onPress={goSign}>
+                        <FontAwesome5 name="hands-helping" size={20} color={theme.colors.white} />
+                        <Text style={styles.dealButtonText}>Sign a Deal</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.chatButton} onPress={goChat}>
+                        <FontAwesome5 name="robot" size={20} color={theme.colors.white} />
+                        <Text style={styles.dealButtonText}>Chat with AI Bot</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={{position: 'absolute', bottom: 24, alignItems: 'center', width: '100%'}}>
                     <AnimatedIcon
                         name="chevrons-up"
@@ -150,6 +194,14 @@ export default function DealDetailScreen({navigation, route}) {
             </View>
             <View key="2">
                 <View style={styles.secondPage}>
+                    <ImageView
+                        images={ROOM_IMG}
+                        imageIndex={fullImageIndex}
+                        visible={fullImageVisible}
+                        onRequestClose={() => {
+                            setFullImageVisible(false);
+                        }}
+                    />
                     <View style={styles.secondPageHeader}>
                         <TouchableOpacity style={styles.secondPageHeaderButton} onPress={goBack}>
                             <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
@@ -162,10 +214,61 @@ export default function DealDetailScreen({navigation, route}) {
                         <View style={styles.list}>
                             <View style={styles.listHeader}>
                                 <MaterialIcons name="dashboard" size={20} color={theme.colors.primary} />
-                                <Text style={styles.subTitle}>OVERVIEW</Text>
+                                <Text style={styles.subTitle}>The Deelio</Text>
                             </View>
                             <View style={styles.listBody}>
                                 <Text style={styles.listText}>{deal.description}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.list}>
+                            <View style={styles.listHeader}>
+                                <MaterialIcons name="video-collection" size={20} color={theme.colors.primary} />
+                                <Text style={styles.subTitle}>ABOUT US</Text>
+                            </View>
+                            <View style={styles.listBody}>
+                                <YoutubePlayer
+                                    height={((WIDTH - theme.spacing.lg * 2) * 9) / 16}
+                                    play={false}
+                                    videoId={'8th1jMu2n7s'}
+                                    onChangeState={() => {}}
+                                />
+                            </View>
+                        </View>
+                        <View style={styles.list}>
+                            <View style={styles.listHeader}>
+                                <Ionicons name="images" size={18} color={theme.colors.primary} />
+                                <Text style={styles.subTitle}>PAST PROJECTS</Text>
+                            </View>
+                            <View style={styles.listBody}>
+                                <Carousel
+                                    loop={false}
+                                    autoPlay={false}
+                                    style={{width: WIDTH - theme.spacing.lg * 2, height: 240}}
+                                    width={WIDTH - theme.spacing.lg * 4}
+                                    data={ROOM_IMG}
+                                    mode="horizontal-stack"
+                                    modeConfig={{
+                                        snapDirection: 'left',
+                                        stackInterval: 14,
+                                        opacityInterval: 0.14,
+                                    }}
+                                    onSnapToItem={index => {
+                                        setFullImageIndex(index);
+                                    }}
+                                    renderItem={({item, index}) => {
+                                        return (
+                                            <Item
+                                                key={index}
+                                                imageSource={item}
+                                                onPress={() => {
+                                                    setFullImageIndex(index);
+                                                    setFullImageVisible(true);
+                                                }}
+                                            />
+                                        );
+                                    }}
+                                    scrollAnimationDuration={600}
+                                />
                             </View>
                         </View>
                         <View style={styles.list}>
@@ -245,7 +348,7 @@ export default function DealDetailScreen({navigation, route}) {
                                 <Text style={styles.chartText}>2022 Company Status</Text>
                                 <ProgressChart
                                     data={data}
-                                    width={width}
+                                    width={WIDTH}
                                     height={220}
                                     strokeWidth={16}
                                     radius={28}
@@ -257,13 +360,13 @@ export default function DealDetailScreen({navigation, route}) {
                         <View style={styles.list}>
                             <View style={[styles.listBody, {paddingHorizontal: 0}]}>
                                 <Text style={[styles.chartText, STYLES.mt20, STYLES.mb12]}>2022 Average Monthly Occuppancy</Text>
-                                <BarChart data={data1} width={width} height={260} yAxisLabel="%" chartConfig={chartConfig} fromZero />
+                                <BarChart data={data1} width={WIDTH} height={260} yAxisLabel="%" chartConfig={chartConfig} fromZero />
                             </View>
                         </View>
                         <View style={styles.list}>
                             <View style={[styles.listBody, {paddingHorizontal: 0}]}>
                                 <Text style={[styles.chartText, STYLES.mt20, STYLES.mb12]}>2022 Average Monthly Daily Rate</Text>
-                                <LineChart data={data1} width={width} height={260} yAxisLabel="%" chartConfig={chartConfig} fromZero bezier />
+                                <LineChart data={data1} width={WIDTH} height={260} yAxisLabel="%" chartConfig={chartConfig} fromZero bezier />
                             </View>
                         </View>
                         <View style={styles.list}>
@@ -306,24 +409,25 @@ const useStyles = makeStyles(theme => ({
     },
     mainImage: {
         width: '100%',
-        height: height * 0.46,
+        height: HEIGHT * 0.4,
         resizeMode: 'cover',
         borderBottomRightRadius: 30,
         borderBottomLeftRadius: 30,
     },
     imgBackground: {
         width: '100%',
-        height: height,
+        height: HEIGHT,
     },
     header: {
         display: 'flex',
-        height: height * 0.8,
+        height: HEIGHT * 0.8,
         backgroundColor: 'gray',
     },
     titleText: {
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: 'bold',
         color: theme.colors.white,
+        marginBottom: theme.spacing.lg,
     },
     firstPageBody: {
         paddingHorizontal: theme.spacing.lg,
@@ -378,18 +482,36 @@ const useStyles = makeStyles(theme => ({
         color: theme.colors.primary,
         fontSize: 12,
     },
+    buttonGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: '100%',
+        position: 'absolute',
+        bottom: 54,
+    },
+    chatButton: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        width: '90%',
+        height: 44,
+        borderWidth: 1,
+        borderColor: theme.colors.primary,
+        borderRadius: 30,
+        marginTop: theme.spacing.sm,
+    },
     dealButton: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
         width: '90%',
-        height: 46,
+        height: 44,
         backgroundColor: theme.colors.primary,
         borderRadius: 30,
-        marginHorizontal: '5%',
-        position: 'absolute',
-        bottom: 60,
     },
     dealButtonText: {
         fontSize: 18,
@@ -514,6 +636,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',
+        marginBottom: theme.spacing.sm,
     },
     ratingText: {
         fontSize: 20,

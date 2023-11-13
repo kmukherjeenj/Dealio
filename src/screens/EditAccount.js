@@ -59,7 +59,10 @@ export default function EditAccountScreen({navigation}) {
         if (error) {
             return;
         }
-        register(dispatch, values)
+        register(dispatch, {
+            ...values,
+            address,
+        })
             .then(res => {
                 navigation.navigate('HomeNav');
             })
@@ -160,7 +163,7 @@ export default function EditAccountScreen({navigation}) {
                                         }}
                                         listViewDisplayed={false}
                                         query={{
-                                            key: 'AIzaSyAFF1M2AeYt8ZL5I72nwy6B1nEVS8mSxmU',
+                                            key: 'AIzaSyCQmCmGXvkqZKe9ragXfMcbUoGn6cvWJs0',
                                             language: 'en',
                                             types: 'address',
                                             components: 'country:us',

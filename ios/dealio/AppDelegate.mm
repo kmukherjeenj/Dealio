@@ -6,7 +6,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyCJqLuXb1vpThq4zuxP_Qc7jz4EAiU_vl4"];
+  [GMSServices provideAPIKey:@"AIzaSyAFF1M2AeYt8ZL5I72nwy6B1nEVS8mSxmU"];
   self.moduleName = @"dealio";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.

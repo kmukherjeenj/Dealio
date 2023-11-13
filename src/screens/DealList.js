@@ -12,16 +12,8 @@ import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} fro
 import {FirstUpperCase} from '../utils/uppercaseFirstLetter';
 import SERVER from '../server/server';
 import {Tabs} from 'react-native-collapsible-tab-view';
-import ROOM1 from '../assets/room0.jpg';
-import ROOM2 from '../assets/room1.jpg';
-import ROOM3 from '../assets/room2.jpg';
-import ROOM4 from '../assets/room3.jpg';
-import ROOM5 from '../assets/room4.jpg';
-import ROOM6 from '../assets/room5.jpg';
-import ROOM7 from '../assets/room6.jpg';
-import ROOM8 from '../assets/room7.jpg';
-
-const ROOM_IMG = [ROOM1, ROOM2, ROOM3, ROOM4, ROOM5, ROOM6, ROOM7, ROOM8];
+import {makeShort} from '../utils/makeShort';
+import FastImage from 'react-native-fast-image';
 
 const width = Dimensions.get('window').width;
 
@@ -35,22 +27,28 @@ export default function DealListScreen({navigation}) {
     const token = useSelector(state => state.token);
     const {theme} = useTheme();
 
-    const DATA = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
     useEffect(() => {
         if (token) {
             SERVER.defaults.headers.common.Authorization = `Bearer ${token}`;
-            getDeals(dispatch)
-                .then(res => {})
-                .catch(err => {
-                    Toast.show({
-                        type: 'error',
-                        text1: 'Error',
-                        text2: err,
-                    });
-                });
+            getData();
         }
     }, [token, navigation]);
+
+    const getData = () => {
+        getDeals(dispatch)
+            .then(res => {})
+            .catch(err => {
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: err,
+                });
+            });
+    };
+
+    const goReload = () => {
+        getData();
+    };
 
     const pressAnim = useSharedValue(0);
 
@@ -98,7 +96,7 @@ export default function DealListScreen({navigation}) {
 
     const renderItem = ({item, index}) => {
         const goDetail = () => {
-            navigation.navigate('DealDetail', {deal: item, image: ROOM_IMG[index]});
+            navigation.navigate('DealDetail', {deal: item});
         };
 
         return (
@@ -108,7 +106,7 @@ export default function DealListScreen({navigation}) {
                         <Ionicons name="home-outline" color={theme.colors.primary} size={14} />
                         <Text style={[styles.locationText, {color: theme.colors.primary}]}>{item.company.name?.toUpperCase()}</Text>
                     </View>
-                    <Text style={styles.listTitle}>{FirstUpperCase(item.title)}</Text>
+                    <Text style={styles.listTitle}>{makeShort(FirstUpperCase(item.title), 25)}</Text>
                     <View style={styles.listRatingContainer}>
                         <AirbnbRating size={14} isDisabled showRating={false} readonly defaultRating={5} />
                         <Text style={{color: theme.colors.warning}}>5.0</Text>
@@ -127,7 +125,7 @@ export default function DealListScreen({navigation}) {
                     </View>
                 </View>
                 <View>
-                    <Image source={ROOM_IMG[index]} style={styles.listImg} />
+                    <Image source={{uri: item.mainImage}} style={styles.listImg} />
                 </View>
             </TouchableOpacity>
         );
@@ -138,12 +136,25 @@ export default function DealListScreen({navigation}) {
             renderHeader={renderHeader}
             renderTabBar={() => (
                 <View style={styles.listHeader}>
-                    <Image source={require('../assets/favicon.png')} style={{width: 34, height: 34, resizeMode: 'cover'}} />
-                    <Text style={[styles.subTitle, STYLES.ml8]}>FEATURED DEALS</Text>
+                    <View style={[STYLES.row, {alignItems: 'flex-end'}]}>
+                        <Image source={require('../assets/favicon.png')} style={{width: 34, height: 34, resizeMode: 'cover'}} />
+                        <Text style={[styles.subTitle, STYLES.ml8]}>FEATURED DEALS</Text>
+                    </View>
+                    <TouchableOpacity style={styles.reloadButton} onPress={goReload}>
+                        <Ionicons name="reload" color={theme.colors.primary} size={24} />
+                    </TouchableOpacity>
                 </View>
             )}>
             <Tabs.Tab name="deals">
-                <Tabs.FlatList data={deals} renderItem={renderItem} keyExtractor={v => v.id} />
+                <Tabs.FlatList
+                    data={deals}
+                    refreshing={false}
+                    renderItem={renderItem}
+                    keyExtractor={v => v.id}
+                    onRefresh={() => {
+                        getData();
+                    }}
+                />
             </Tabs.Tab>
         </Tabs.Container>
     );
@@ -164,12 +175,12 @@ const CustomItem = ({item, index, navigation, pressAnim}) => {
     }, []);
 
     const goDetail = () => {
-        navigation.navigate('DealDetail', {deal: item, image: ROOM_IMG[index]});
+        navigation.navigate('DealDetail', {deal: item});
     };
 
     return (
         <Animated.View style={[{flex: 1, overflow: 'hidden'}, animStyle]} key={item.id}>
-            <Animated.Image source={ROOM_IMG[index]} resizeMode="cover" style={styles.itemImg} />
+            <FastImage source={{uri: item.mainImage}} resizeMode="cover" style={styles.itemImg} />
             <TouchableOpacity style={styles.detailButton} onPress={goDetail}>
                 <MaterialIcons name="dashboard" size={20} color={theme.colors.white} />
                 <Text style={styles.detailButtonText}>View Detail</Text>
@@ -179,10 +190,10 @@ const CustomItem = ({item, index, navigation, pressAnim}) => {
                 <Animated.Text style={styles.ratingText}>5.0</Animated.Text>
             </Animated.View>
             <Animated.View style={styles.infoWrap}>
-                <Animated.Image source={ROOM_IMG[index]} resizeMethod="scale" blurRadius={40} style={styles.infoContainer} />
+                <Animated.Image source={{uri: item.mainImage}} resizeMethod="scale" blurRadius={40} style={styles.infoContainer} />
                 <Animated.View style={styles.infoView}>
                     <View style={[STYLES.row, STYLES.alignC, {justifyContent: 'space-between'}]}>
-                        <Animated.Text style={styles.titleText}>{FirstUpperCase(item.title)}</Animated.Text>
+                        <Animated.Text style={styles.titleText}>{makeShort(FirstUpperCase(item.title), 20)}</Animated.Text>
                     </View>
                     <Animated.View style={styles.companyContainer}>
                         <Animated.View style={[STYLES.row]}>
@@ -314,6 +325,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-end',
+        justifyContent: 'space-between',
         paddingHorizontal: theme.spacing.lg,
         paddingVertical: theme.spacing.lg,
         height: Platform.select({ios: 90, android: 70}),
@@ -383,5 +395,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'row',
         marginVertical: theme.spacing.xs,
         alignItems: 'center',
+    },
+    reloadButton: {
+        marginRight: theme.spacing.md,
     },
 }));

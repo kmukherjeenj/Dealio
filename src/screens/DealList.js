@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
-import {Image, makeStyles, Text, Rating, AirbnbRating, useTheme} from '@rneui/themed';
+import {Image, makeStyles, Text, AirbnbRating, useTheme} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -208,7 +208,7 @@ const CustomItem = ({item, index, navigation, pressAnim}) => {
                     <Animated.View style={styles.companyContainer}>
                         <Animated.View style={[STYLES.row]}>
                             <Ionicons name="location-outline" color={theme.colors.error} size={16} />
-                            <Animated.Text style={styles.locationText}>{item.company.location.address}</Animated.Text>
+                            <Animated.Text style={styles.locationText}>{makeShort(item.company.location.address, 30)}</Animated.Text>
                         </Animated.View>
                         <Animated.View style={styles.returnContainer}>
                             <Animated.Text style={styles.locationText}>{item.dealStructure.ownershipPercentageOffered}% Return</Animated.Text>

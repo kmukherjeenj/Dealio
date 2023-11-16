@@ -19,9 +19,7 @@ export default function PDFViewer({navigation, route}) {
                 <TouchableOpacity style={styles.headerButton} onPress={goBack}>
                     <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
                 </TouchableOpacity>
-                <Text h4 style={{marginLeft: theme.spacing.sm}}>
-                    {name}
-                </Text>
+                <Text h4 style={{marginLeft: theme.spacing.sm}}></Text>
             </View>
             <View style={styles.body}>
                 <Pdf

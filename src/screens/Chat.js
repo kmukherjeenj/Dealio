@@ -1,20 +1,25 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Text, makeStyles, useTheme} from '@rneui/themed';
-import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
+import {makeStyles, useTheme} from '@rneui/themed';
+import {Platform, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GiftedChat} from 'react-native-gifted-chat';
+import {Composer, GiftedChat} from 'react-native-gifted-chat';
 import BotImg from '../assets/bot.png';
+import {getChat} from '../redux/action/action';
+import {useDispatch} from 'react-redux';
 
-export default function ChatScreen({navigation}) {
+export default function ChatScreen({navigation, route}) {
     const {theme} = useTheme();
     const styles = useStyles();
+    const dispatch = useDispatch();
     const [messages, setMessages] = useState([]);
+    const [isTyping, setIsTyping] = useState(false);
+    const {docID} = route.params;
 
     useEffect(() => {
         setMessages([
             {
                 _id: 1,
-                text: `AI chatbots for financial due diligence can automate tasks, improve accuracy, and reduce costs, helping accredited investors make better investment and acquisition decisions`,
+                text: `AI chatbots for financial due diligence can automate tasks, improve accuracy, and reduce costs, helping accredited investors make better investment and acquisition decisions. \n\n Please ask what you want.`,
                 createdAt: new Date(),
                 user: {
                     _id: 2,
@@ -31,6 +36,44 @@ export default function ChatScreen({navigation}) {
 
     const onSend = useCallback((messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+        setIsTyping(true);
+        getChat(dispatch, {
+            docID,
+            msg: [
+                {
+                    sender: 'User',
+                    message: messages[0].text,
+                },
+            ],
+        })
+            .then(res => {
+                const answerMessge = {
+                    _id: res.created,
+                    text: res.answer.message,
+                    createdAt: new Date(),
+                    user: {
+                        _id: 2,
+                        name: 'Deelio',
+                        avatar: BotImg,
+                    },
+                };
+                setIsTyping(false);
+                setMessages(previousMessages => GiftedChat.append(previousMessages, [answerMessge]));
+            })
+            .catch(err => {
+                const failMessge = {
+                    _id: new Date().getTime().toString(),
+                    text: 'Failed to send a message.',
+                    createdAt: new Date(),
+                    system: true,
+                    user: {
+                        _id: 1,
+                        name: 'System',
+                    },
+                };
+                setIsTyping(false);
+                setMessages(previousMessages => GiftedChat.append(previousMessages, [failMessge]));
+            });
     }, []);
 
     return (
@@ -44,9 +87,11 @@ export default function ChatScreen({navigation}) {
                 <GiftedChat
                     messages={messages}
                     onSend={messages => onSend(messages)}
+                    isTyping={isTyping}
                     user={{
                         _id: 1,
                     }}
+                    renderComposer={props => <Composer textInputStyle={{color: theme.colors.grey0}} {...props} />}
                 />
             </View>
         </View>

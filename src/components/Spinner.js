@@ -1,4 +1,4 @@
-import {useTheme} from '@rneui/themed';
+import {Text, useTheme} from '@rneui/themed';
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import * as Progress from 'react-native-progress';
@@ -10,14 +10,7 @@ export const Spinner = ({visible}) => {
     const {theme} = useTheme();
     return (
         <View style={[styles.container, {display: visible ? 'flex' : 'none'}]}>
-            <Progress.CircleSnail
-                size={60}
-                color={[
-                    theme.colors.primary,
-                    theme.colors.success,
-                    theme.colors.error,
-                ]}
-            />
+            <Progress.CircleSnail size={60} color={[theme.colors.primary, theme.colors.success, theme.colors.error]} />
         </View>
     );
 };

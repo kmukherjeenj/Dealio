@@ -83,7 +83,7 @@ export default function DealDetailScreen({navigation, route}) {
     };
 
     const goChat = () => {
-        navigation.navigate('Chat');
+        navigation.navigate('ChatList', {deal});
     };
 
     const Item = ({imageSource, onPress, entering}) => {
@@ -195,14 +195,17 @@ export default function DealDetailScreen({navigation, route}) {
             </View>
             <View key="2">
                 <View style={styles.secondPage}>
-                    <ImageView
-                        images={ROOM_IMG}
-                        imageIndex={fullImageIndex}
-                        visible={fullImageVisible}
-                        onRequestClose={() => {
-                            setFullImageVisible(false);
-                        }}
-                    />
+                    {deal && deal.pastProjects && (
+                        <ImageView
+                            images={deal.pastProjects.map(item => ({uri: item}))}
+                            imageIndex={fullImageIndex}
+                            visible={fullImageVisible}
+                            onRequestClose={() => {
+                                setFullImageVisible(false);
+                            }}
+                        />
+                    )}
+
                     <View style={styles.secondPageHeader}>
                         <TouchableOpacity style={styles.secondPageHeaderButton} onPress={goBack}>
                             <Ionicons name="arrow-back" size={22} color={theme.colors.white} />
@@ -218,7 +221,7 @@ export default function DealDetailScreen({navigation, route}) {
                                 <Text style={styles.subTitle}>The Deelio</Text>
                             </View>
                             <View style={styles.listBody}>
-                                <Text style={styles.listText}>{deal.description}</Text>
+                                <Text style={styles.listText}>{deal.dealStructure.terms}</Text>
                             </View>
                         </View>
                         <View style={styles.list}>
@@ -264,50 +267,52 @@ export default function DealDetailScreen({navigation, route}) {
                                 />
                             </View>
                         </View> */}
-                        <View style={styles.list}>
-                            <View style={styles.listHeader}>
-                                <Ionicons name="images" size={18} color={theme.colors.primary} />
-                                <Text style={styles.subTitle}>PAST PROJECTS</Text>
+                        {deal && deal.pastProjects && (
+                            <View style={styles.list}>
+                                <View style={styles.listHeader}>
+                                    <Ionicons name="images" size={18} color={theme.colors.primary} />
+                                    <Text style={styles.subTitle}>PAST PROJECTS</Text>
+                                </View>
+                                <View style={styles.listBody}>
+                                    <Carousel
+                                        loop={false}
+                                        autoPlay={false}
+                                        style={{width: WIDTH - theme.spacing.lg * 2, height: 240}}
+                                        width={WIDTH - theme.spacing.lg * 4}
+                                        data={deal.pastProjects}
+                                        mode="horizontal-stack"
+                                        modeConfig={{
+                                            snapDirection: 'left',
+                                            stackInterval: 14,
+                                            opacityInterval: 0.14,
+                                        }}
+                                        onSnapToItem={index => {
+                                            setFullImageIndex(index);
+                                        }}
+                                        renderItem={({item, index}) => {
+                                            return (
+                                                <Item
+                                                    key={index}
+                                                    imageSource={{uri: item}}
+                                                    onPress={() => {
+                                                        setFullImageIndex(index);
+                                                        setFullImageVisible(true);
+                                                    }}
+                                                />
+                                            );
+                                        }}
+                                        scrollAnimationDuration={600}
+                                    />
+                                </View>
                             </View>
-                            <View style={styles.listBody}>
-                                <Carousel
-                                    loop={false}
-                                    autoPlay={false}
-                                    style={{width: WIDTH - theme.spacing.lg * 2, height: 240}}
-                                    width={WIDTH - theme.spacing.lg * 4}
-                                    data={ROOM_IMG}
-                                    mode="horizontal-stack"
-                                    modeConfig={{
-                                        snapDirection: 'left',
-                                        stackInterval: 14,
-                                        opacityInterval: 0.14,
-                                    }}
-                                    onSnapToItem={index => {
-                                        setFullImageIndex(index);
-                                    }}
-                                    renderItem={({item, index}) => {
-                                        return (
-                                            <Item
-                                                key={index}
-                                                imageSource={item}
-                                                onPress={() => {
-                                                    setFullImageIndex(index);
-                                                    setFullImageVisible(true);
-                                                }}
-                                            />
-                                        );
-                                    }}
-                                    scrollAnimationDuration={600}
-                                />
-                            </View>
-                        </View>
+                        )}
                         <View style={styles.list}>
                             <View style={styles.listHeader}>
                                 <MaterialIcons name="policy" size={20} color={theme.colors.primary} />
                                 <Text style={styles.subTitle}>TERMS AND CONDITIONS</Text>
                             </View>
                             <View style={styles.listBody}>
-                                <Text style={styles.listText}>{deal.dealStructure.terms}</Text>
+                                <Text style={styles.listText}>{deal.legalAndCompliance.termsAndConditions}</Text>
                             </View>
                         </View>
                         <View style={styles.list}>

@@ -12,12 +12,6 @@ import {Formik, FieldArray} from 'formik';
 import {register} from '../redux/action/action';
 import Toast from 'react-native-toast-message';
 
-const options = {
-    componentRestrictions: {country: 'us'},
-    fields: ['address_components', 'geometry', 'icon', 'name', 'formatted_address'],
-    types: ['address'],
-};
-
 export default function EditAccountScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();

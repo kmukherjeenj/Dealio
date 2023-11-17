@@ -17,7 +17,6 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
     const authed = useSelector(state => state.authed);
-
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{headerShown: false}}>

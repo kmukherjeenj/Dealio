@@ -27,7 +27,7 @@ export const sendOTP = (dispatch, data) =>
                     type: SET_LOADING,
                     payload: false,
                 });
-                reject(handleError(err));
+                reject(handleError(dispatch, err));
             });
     });
 
@@ -51,7 +51,7 @@ export const verifyOTP = (dispatch, data) =>
                     type: SET_LOADING,
                     payload: false,
                 });
-                reject(handleError(err));
+                reject(handleError(dispatch, err));
             });
     });
 
@@ -88,7 +88,7 @@ export const register = (dispatch, data) =>
                     type: SET_LOADING,
                     payload: false,
                 });
-                reject(handleError(err));
+                reject(handleError(dispatch, err));
             });
     });
 
@@ -116,7 +116,7 @@ export const getDeals = dispatch => {
                     type: SET_LOADING,
                     payload: false,
                 });
-                reject(handleError(err));
+                reject(handleError(dispatch, err));
             });
     });
 };
@@ -136,12 +136,12 @@ export const getChat = (dispatch, data) => {
                 if (response.status === 200) {
                     resolve(response.data);
                 } else {
-                    reject(handleError(response.status));
+                    reject(handleError(dispatch, response.status));
                 }
             })
             .catch(error => {
                 console.error(error);
-                reject(handleError(error));
+                reject(handleError(dispatch, error));
             });
     });
 };

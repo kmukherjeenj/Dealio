@@ -23,9 +23,7 @@ function RootNavigator() {
                 component={DealListScreen}
                 options={{
                     tabBarLabel: 'Home',
-                    tabBarIcon: ({color, size}) => (
-                        <Ionicons name="home" color={color} size={size} />
-                    ),
+                    tabBarIcon: ({color, size}) => <Ionicons name="home" color={color} size={size} />,
                 }}
             />
             <Tab.Screen
@@ -33,9 +31,7 @@ function RootNavigator() {
                 component={AnalysisScreen}
                 options={{
                     tabBarLabel: 'Analysis',
-                    tabBarIcon: ({color, size}) => (
-                        <AntDesign name="dashboard" color={color} size={size} />
-                    ),
+                    tabBarIcon: ({color, size}) => <AntDesign name="dashboard" color={color} size={size} />,
                 }}
             />
             <Tab.Screen
@@ -43,13 +39,7 @@ function RootNavigator() {
                 component={DealListScreen}
                 options={{
                     tabBarLabel: 'My Deals',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesome5
-                            name="handshake"
-                            color={color}
-                            size={size}
-                        />
-                    ),
+                    tabBarIcon: ({color, size}) => <FontAwesome5 name="handshake" color={color} size={size} />,
                 }}
             />
             <Tab.Screen
@@ -57,9 +47,7 @@ function RootNavigator() {
                 component={ProfileScreen}
                 options={{
                     tabBarLabel: 'Profile',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesome5 name="user" color={color} size={size} />
-                    ),
+                    tabBarIcon: ({color, size}) => <FontAwesome5 name="user" color={color} size={size} />,
                 }}
             />
         </Tab.Navigator>

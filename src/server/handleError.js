@@ -1,4 +1,6 @@
-export const handleError = error => {
+import {SET_LOG_OUT} from '../redux/types';
+
+export const handleError = (dispatch, error) => {
     if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
@@ -6,6 +8,10 @@ export const handleError = error => {
         // console.log(error.response.status);
         // console.log(error.response.headers);
         if (error.response.status === 401) {
+            dispatch({
+                type: SET_LOG_OUT,
+                payload: null,
+            });
             return 'Unauthorized. Please login again!';
         }
         if (error.response.status === 400) {

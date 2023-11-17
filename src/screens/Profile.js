@@ -3,12 +3,14 @@ import {Platform, ScrollView, View} from 'react-native';
 import {Button, Image, makeStyles, Text, useTheme} from '@rneui/themed';
 import {STYLES} from '../global/styles';
 import Feather from 'react-native-vector-icons/Feather';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {INVESTOR_TYPE} from '../constant/mock-data';
+import {SET_LOG_OUT} from '../redux/types';
 
 export default function ProfileScreen({navigation}) {
     const styles = useStyles();
     const {theme} = useTheme();
+    const dispatch = useDispatch();
     const user = useSelector(state => state.user);
 
     return (
@@ -69,6 +71,30 @@ export default function ProfileScreen({navigation}) {
                                             - {INVESTOR_TYPE.filter(e => e.key === item)[0].value}
                                         </Text>
                                     ))}
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.fragment}>
+                            <View style={styles.fragmentHeader}>
+                                <Text style={styles.fragmentHeaderText}>Account Setting</Text>
+                            </View>
+                            <View style={styles.fragmentBody}>
+                                <View style={styles.row}>
+                                    <Button
+                                        type="outline"
+                                        buttonStyle={{borderWidth: 0}}
+                                        containerStyle={{borderWidth: 1, borderColor: theme.colors.primary}}
+                                        onPress={() => {
+                                            dispatch({
+                                                type: SET_LOG_OUT,
+                                                payload: null,
+                                            });
+                                        }}>
+                                        Log out
+                                    </Button>
+                                </View>
+                                <View style={styles.row}>
+                                    <Button color="error">Delete account</Button>
                                 </View>
                             </View>
                         </View>

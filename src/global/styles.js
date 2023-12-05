@@ -8,6 +8,9 @@ export const STYLES = {
     ml8: {
         marginLeft: 8,
     },
+    mt6: {
+        marginTop: 6,
+    },
     mt12: {
         marginTop: 12,
     },

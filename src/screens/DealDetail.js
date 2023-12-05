@@ -79,7 +79,7 @@ export default function DealDetailScreen({navigation, route}) {
     };
 
     const goSign = () => {
-        navigation.navigate('Signed');
+        navigation.navigate('SignList', {deal});
     };
 
     const goChat = () => {

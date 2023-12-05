@@ -1,11 +1,18 @@
 import React from 'react';
 import {Text, makeStyles, useTheme} from '@rneui/themed';
-import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
+import {Platform, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector} from 'react-redux';
+import {STYLES} from '../global/styles';
+import SignStatus from '../components/SignStatus';
 
-export default function SignedScreen({navigation}) {
+export default function SignedScreen({navigation, route}) {
     const {theme} = useTheme();
     const styles = useStyles();
+    const user = useSelector(state => state.user);
+    const {envelopeId, dealId, docId, docName, envelopeData} = route.params;
+    // console.log('jere : ', envelopeData);
+    const {sender, status, sentDateTime, lastModifiedDateTime} = envelopeData.status;
 
     const goBack = () => {
         navigation.goBack();
@@ -19,7 +26,36 @@ export default function SignedScreen({navigation}) {
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
-                <Text h4>Signed Page</Text>
+                <View style={styles.statusCard}>
+                    <Text style={styles.captionText}>Document</Text>
+                    <Text style={styles.valueText}>{docName}</Text>
+                </View>
+                <View style={styles.statusCard}>
+                    <Text style={styles.captionText}>Signature</Text>
+                    <View style={[STYLES.row, STYLES.alignC, STYLES.sb, STYLES.mt6]}>
+                        <Text style={styles.rowValue}>Status</Text>
+                        <SignStatus value={status} />
+                    </View>
+                    <View style={[STYLES.row, STYLES.alignC, STYLES.sb, STYLES.mt6]}>
+                        <Text style={styles.rowTitle}>Sent</Text>
+                        <Text style={styles.rowValue}>{new Date(sentDateTime).toLocaleString()}</Text>
+                    </View>
+                    <View style={[STYLES.row, STYLES.alignC, STYLES.sb, STYLES.mt6]}>
+                        <Text style={styles.rowTitle}>Updated</Text>
+                        <Text style={styles.rowValue}>{new Date(lastModifiedDateTime).toLocaleString()}</Text>
+                    </View>
+                </View>
+                <View style={styles.statusCard}>
+                    <Text style={styles.captionText}>Sender</Text>
+                    <View style={[STYLES.row, STYLES.alignC, STYLES.sb, STYLES.mt6]}>
+                        <Text style={styles.rowTitle}>Name</Text>
+                        <Text style={styles.rowValue}>{sender.userName}</Text>
+                    </View>
+                    <View style={[STYLES.row, STYLES.alignC, STYLES.sb, STYLES.mt6]}>
+                        <Text style={styles.rowTitle}>Email</Text>
+                        <Text style={styles.rowValue}>{sender.email}</Text>
+                    </View>
+                </View>
             </View>
         </View>
     );
@@ -60,8 +96,39 @@ const useStyles = makeStyles(theme => ({
     },
     body: {
         flex: 1,
+        paddingTop: theme.spacing.md,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        justifyContent: 'center',
+    },
+    statusCard: {
+        backgroundColor: theme.colors.white,
+        width: '100%',
+        paddingVertical: theme.spacing.lg,
+        paddingHorizontal: theme.spacing.xl,
+        marginVertical: theme.spacing.sm,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.053,
+        shadowRadius: 2.62,
+        elevation: 2,
+    },
+    captionText: {
+        fontSize: 14,
+        marginBottom: theme.spacing.md,
+        // color: '#303030',
+        color: theme.colors.primary,
+    },
+    valueText: {
+        fontSize: 16,
+        color: '#191919',
+    },
+    rowTitle: {
+        color: theme.colors.grey1,
+    },
+    rowValue: {
+        color: theme.colors.grey0,
     },
 }));

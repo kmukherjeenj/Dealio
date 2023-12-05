@@ -12,6 +12,7 @@ import PDFViewer from '../screens/PDFViewer';
 import SignedScreen from '../screens/Signed';
 import ChatScreen from '../screens/Chat';
 import ChatListScreen from '../screens/ChatList';
+import SignListScreen from '../screens/SignList';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const Navigator = () => {
                         <Stack.Screen name="DealDetail" component={DealDetailScreen} />
                         <Stack.Screen name="PDFViewer" component={PDFViewer} />
                         <Stack.Screen name="Signed" component={SignedScreen} />
+                        <Stack.Screen name="SignList" component={SignListScreen} />
                         <Stack.Screen name="ChatList" component={ChatListScreen} />
                         <Stack.Screen name="Chat" component={ChatScreen} />
                     </>

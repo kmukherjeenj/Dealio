@@ -6,11 +6,12 @@ import * as Progress from 'react-native-progress';
 const WIDTH = Dimensions.get('screen').width;
 const HEIGHT = Dimensions.get('screen').height;
 
-export const Spinner = ({visible}) => {
+export const Spinner = ({visible, loadingText}) => {
     const {theme} = useTheme();
     return (
         <View style={[styles.container, {display: visible ? 'flex' : 'none'}]}>
             <Progress.CircleSnail size={60} color={[theme.colors.primary, theme.colors.success, theme.colors.error]} />
+            <Text style={{marginTop: 10, color: theme.colors.primary, fontSize: 14, textAlign: 'center', maxWidth: '80%'}}>{loadingText}</Text>
         </View>
     );
 };
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#00000099',
+        backgroundColor: '#000000A9',
         width: WIDTH,
         height: HEIGHT,
         top: 0,

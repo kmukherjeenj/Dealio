@@ -145,3 +145,75 @@ export const getChat = (dispatch, data) => {
             });
     });
 };
+
+export const initSign = (dispatch, data) =>
+    new Promise((resolve, reject) => {
+        dispatch({
+            type: SET_LOADING,
+            payload: true,
+        });
+
+        SERVER.post('/sign/init', data)
+            .then(res => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                resolve(res.data);
+            })
+            .catch(err => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                reject(handleError(dispatch, err));
+            });
+    });
+
+export const getSignAbility = (dispatch, data) =>
+    new Promise((resolve, reject) => {
+        dispatch({
+            type: SET_LOADING,
+            payload: true,
+        });
+
+        SERVER.post('/sign/get-sign-ability', data)
+            .then(res => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                resolve(res.data);
+            })
+            .catch(err => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                reject(handleError(dispatch, err));
+            });
+    });
+
+export const getEnvolope = (dispatch, data) =>
+    new Promise((resolve, reject) => {
+        dispatch({
+            type: SET_LOADING,
+            payload: true,
+        });
+
+        SERVER.post('/sign/get-envolope', data)
+            .then(res => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                resolve(res.data);
+            })
+            .catch(err => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                reject(handleError(dispatch, err));
+            });
+    });

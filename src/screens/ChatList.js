@@ -1,19 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {Text, makeStyles, useTheme} from '@rneui/themed';
-import {Dimensions, Platform, ScrollView, TouchableOpacity, View} from 'react-native';
+import {Platform, ScrollView, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {GiftedChat} from 'react-native-gifted-chat';
-import BotImg from '../assets/bot.png';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Toast from 'react-native-toast-message';
-import {uploadDocument} from '../redux/action/action';
-import {useDispatch} from 'react-redux';
 
 export default function ChatListScreen({navigation, route}) {
     const {theme} = useTheme();
     const styles = useStyles();
-    const dispatch = useDispatch();
-    const [messages, setMessages] = useState([]);
     const {deal} = route.params;
 
     const goBack = () => {

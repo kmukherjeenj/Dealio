@@ -6,6 +6,7 @@ import SERVER from './server/server';
 
 export const AppRoot = () => {
     const loading = useSelector(state => state.loading);
+    const loadingText = useSelector(state => state.loadingText);
     const token = useSelector(state => state.token);
 
     useEffect(() => {
@@ -17,7 +18,7 @@ export const AppRoot = () => {
     return (
         <>
             <Navigator />
-            <Spinner visible={loading} />
+            <Spinner visible={loading} loadingText={loadingText} />
         </>
     );
 };

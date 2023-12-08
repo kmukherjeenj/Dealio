@@ -5,6 +5,7 @@ import {store} from './src/redux/store';
 import Toast from 'react-native-toast-message';
 import {AppRoot} from './src/app';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {StripeProvider} from '@stripe/stripe-react-native';
 
 const theme = createTheme({
     lightColors: {
@@ -91,7 +92,13 @@ export default function App() {
         <GestureHandlerRootView style={{flex: 1}}>
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
-                    <AppRoot />
+                    <StripeProvider
+                        publishableKey="pk_test_51OL4KnDCoNs0A945iVRJLKqvrB75nAaDoiNp76NX7I0J6zTxmXlbdmehBZ62Aoa7hfWmjkixcOqu2frKviAhDXyf00EhOAk3hm"
+                        urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+                        merchantIdentifier="merchant.com.apexcup.deelio" // required for Apple Pay
+                    >
+                        <AppRoot />
+                    </StripeProvider>
                 </ThemeProvider>
                 <Toast position="top" autoHide visibilityTime={2000} topOffset={50} />
             </Provider>

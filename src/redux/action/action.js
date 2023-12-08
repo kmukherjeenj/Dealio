@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {handleError} from '../../server/handleError';
 import SERVER from '../../server/server';
-import {SET_AUTH, SET_DEALS, SET_EMAIL, SET_LOADING, SET_TOKEN, SET_USER} from '../types';
+import {SET_AUTH, SET_DEALS, SET_EMAIL, SET_LOADING, SET_LOADING_TEXT, SET_TOKEN, SET_USER} from '../types';
 
 export const sendOTP = (dispatch, data) =>
     new Promise((resolve, reject) => {
@@ -200,14 +200,55 @@ export const getEnvolope = (dispatch, data) =>
             type: SET_LOADING,
             payload: true,
         });
-
+        dispatch({
+            type: SET_LOADING_TEXT,
+            payload: 'Getting signature status...',
+        });
         SERVER.post('/sign/get-envolope', data)
             .then(res => {
                 dispatch({
                     type: SET_LOADING,
                     payload: false,
                 });
+                dispatch({
+                    type: SET_LOADING_TEXT,
+                    payload: '',
+                });
                 resolve(res.data);
+            })
+            .catch(err => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                dispatch({
+                    type: SET_LOADING_TEXT,
+                    payload: '',
+                });
+                reject(handleError(dispatch, err));
+            });
+    });
+
+export const initTransfer = dispatch =>
+    new Promise((resolve, reject) => {
+        dispatch({
+            type: SET_LOADING,
+            payload: true,
+        });
+
+        SERVER.post('/payment/payment-sheet')
+            .then(res => {
+                dispatch({
+                    type: SET_LOADING,
+                    payload: false,
+                });
+                const {paymentIntent, ephemeralKey, customer} = res.data;
+
+                resolve({
+                    paymentIntent,
+                    ephemeralKey,
+                    customer,
+                });
             })
             .catch(err => {
                 dispatch({

@@ -35,8 +35,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fontisto.ttf</string>
@@ -75,7 +73,9 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Deelio want to access your camera to scan QR code.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Deelio want to access your location to check your location.</string>
 </dict>
 </plist>

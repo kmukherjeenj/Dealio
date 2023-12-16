@@ -574,7 +574,7 @@
 				CODE_SIGN_ENTITLEMENTS = dealio/dealio.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = QCC4H6DG2M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = dealio/Info.plist;
@@ -611,7 +611,7 @@
 				CODE_SIGN_ENTITLEMENTS = dealio/dealio.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = QCC4H6DG2M;
 				INFOPLIST_FILE = dealio/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Deel.io;
